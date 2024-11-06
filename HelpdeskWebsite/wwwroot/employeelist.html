@@ -1,0 +1,115 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Employee Add/Update</title>
+    <meta charset="utf-8" />
+    <link rel="icon" href="data:;base64,iVBORw0KGgo=">
+    <link href="/lib/css/bootstrap.min.css" rel="stylesheet" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        .nav-link{
+            color: white !important;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-md navbar-light" style="background-color: navy;">
+
+        <a class="navbar-brand mx-3" href="#"  style="color: white;">Case #1 </a>
+        <button class="navbar-toggler mx-3" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarContent">
+            <ul class="navbar-nav mx-3">
+                <li class="nav-item">
+                    <a class="nav-link" href="/employeelookup.html">Lookup</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/modalexample.html">Modal</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/lab7a.html">Lab7a</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/Employee.html">Employee</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/employeelist.html">EmployeeList</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+    <div class="justify-content-center align-items-center row mt-5 ml-1">
+       <img src="lib/Img/Desk.png" alt="logo" class="mx-auto d-block" style="max-height: 348px; max-width: 348px;"/>
+        <div class="col-12 text-center p-3" ><h2>Employees</h2></div>
+        <div class="list-group col-10 custom-background" id="employeeList" style="height: 45vh;">
+        </div>
+    </div>
+
+    <!-- Modal for Lab10a -->
+    <div class="modal fade" id="theModal" tabindex="-1" aria-labelledby="theModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2 class="modal-title" id="theModalLabel"></h2>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mx-2 my-2">
+                        <div class="card">
+                            <div class="card-header text-center" style="background-color: navy; color: white;">Employee Information</div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-4">Title:</div>
+                                    <div class="col-8">
+                                        <input type="text"
+                                               placeholder="Enter Title"
+                                               id="TextBoxTitle"
+                                               class="form-control" />
+                                    </div>
+                                    <div class="col-4">First:</div>
+                                    <div class="col-8">
+                                        <input type="text"
+                                               placeholder="Enter First Name"
+                                               id="TextBoxFirst"
+                                               class="form-control" />
+                                    </div>
+                                    <div class="col-4">Surname:</div>
+                                    <div class="col-8">
+                                        <input type="text"
+                                               placeholder="Enter Surname"
+                                               id="TextBoxLast"
+                                               class="form-control" />
+                                    </div>
+                                    <div class="col-4">Email:</div>
+                                    <div class="col-8">
+                                        <input type="text"
+                                               placeholder="Enter Email"
+                                               id="TextBoxEmail"
+                                               class="form-control" />
+                                    </div>
+                                    <div class="col-4">Phone Number:</div>
+                                    <div class="col-8">
+                                        <input type="text"
+                                               placeholder="Enter Phone Number"
+                                               id="TextBoxPhone"
+                                               class="form-control" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-footer text-center">
+                            <input type="button" value="Update" id="actionbutton" class="m-3" style="background-color: navy; color: white; />
+                            <div id="status" class="text-left mt-3 mb-2"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="/lib/js/jquery.min.js"></script>
+    <script src="/lib/js/bootstrap.min.js"></script>
+    <script src="js/employeelist.js"></script>
+</body>
+</html>

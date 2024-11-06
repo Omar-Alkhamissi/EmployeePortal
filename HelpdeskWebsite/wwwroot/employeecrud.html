@@ -1,0 +1,140 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Employee Add/Update</title>
+    <meta charset="utf-8" />
+    <link rel="icon" href="data:;base64,iVBORw0KGgo=">
+    <link href="/lib/css/bootstrap.min.css" rel="stylesheet" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        .nav-link {
+            color: white !important;
+        }
+
+        .main-content {
+            margin-top: 5vh;
+        }
+
+        .modal-header, .modal-footer {
+            justify-content: center;
+        }
+
+            .modal-footer .btn {
+                margin: 5px;
+            }
+
+        #dialog {
+            width: 100%;
+            max-width: 500px;
+            margin: 2vh auto 0;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-md navbar-light" style="background-color: navy;">
+        <a class="navbar-brand mx-3" href="#" style="color: white;">Case #1 </a>
+        <button class="navbar-toggler mx-3" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarContent">
+            <ul class="navbar-nav mx-3">
+                <li class="nav-item"><a class="nav-link" href="/employeelookup.html">Lookup</a></li>
+                <li class="nav-item"><a class="nav-link" href="/modalexample.html">Modal</a></li>
+                <li class="nav-item"><a class="nav-link" href="/lab7a.html">Lab7a</a></li>
+                <li class="nav-item"><a class="nav-link" href="/Employee.html">Employee</a></li>
+                <li class="nav-item"><a class="nav-link" href="/employeelist.html">EmployeeList</a></li>
+                <li class="nav-item"><a class="nav-link" href="/employeeaddupdate.html">EmployeeUpdate</a></li>
+                <li class="nav-item"><a class="nav-link" href="/employeecrud.html">EmployeeCrud</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Main content -->
+    <div class="main-content d-flex flex-column align-items-center">
+        <img src="lib/Img/Desk.png" alt="logo" class="mx-auto d-block" style="max-height: 348px; max-width: 348px;" />
+        <div class="col-12 text-center p-3">
+            <h2>Employees</h2>
+        </div>
+        <div class="list-group col-10" id="employeeList" style="height:45vh;"></div>
+    </div>
+
+    <!-- Modal for Add/Update Employee -->
+    <div class="modal fade" id="theModal" tabindex="-1" aria-labelledby="theModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2 class="modal-title" id="theModalLabel">Add/Update Employee</h2>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mx-2 my-2">
+                        <div class="card">
+                            <div class="card-header text-center">
+                                <h5>Employee Information</h5>
+                            </div>
+                            <div class="card-body">
+                                <form>
+                                    <div class="form-group row mb-3">
+                                        <label for="TextBoxTitle" class="col-4 col-form-label">Title:</label>
+                                        <div class="col-8">
+                                            <input type="text" placeholder="Enter Title" id="TextBoxTitle" class="form-control" />
+                                        </div>
+                                    </div>
+                                    <div class="form-group row mb-3">
+                                        <label for="TextBoxFirst" class="col-4 col-form-label">First:</label>
+                                        <div class="col-8">
+                                            <input type="text" placeholder="Enter First Name" id="TextBoxFirst" class="form-control" />
+                                        </div>
+                                    </div>
+                                    <div class="form-group row mb-3">
+                                        <label for="TextBoxLast" class="col-4 col-form-label">Surname:</label>
+                                        <div class="col-8">
+                                            <input type="text" placeholder="Enter Surname" id="TextBoxLast" class="form-control" />
+                                        </div>
+                                    </div>
+                                    <div class="form-group row mb-3">
+                                        <label for="TextBoxEmail" class="col-4 col-form-label">Email:</label>
+                                        <div class="col-8">
+                                            <input type="email" placeholder="Enter Email" id="TextBoxEmail" class="form-control" />
+                                        </div>
+                                    </div>
+                                    <div class="form-group row mb-3">
+                                        <label for="TextBoxPhone" class="col-4 col-form-label">Phone Number:</label>
+                                        <div class="col-8">
+                                            <input type="text" placeholder="Enter Phone Number" id="TextBoxPhone" class="form-control" />
+                                        </div>
+                                    </div>
+                                    <div class="form-group row mb-3">
+                                        <label for="ddlDepartments" class="col-4 col-form-label">Department:</label>
+                                        <div class="col-8">
+                                            <select id="ddlDepartments" name="ddlDepartments" class="form-control"></select>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer d-flex flex-column align-items-center">
+                    <input type="button" value="Add" id="actionbutton" class="btn btn-primary" />
+                    <input type="button" class="btn btn-danger" value="Delete" id="dialogbutton" />
+
+                    <div class="alert alert-danger text-center" role="alert" id="dialog">
+                        <strong>What's it going to be?</strong><p></p>
+                        <input type="button" class="btn btn-secondary" value="Yes" id="deletebutton" />
+                        <input type="button" class="btn btn-secondary" value="No" id="nobutton" />
+                    </div>
+
+                    <div id="status"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="/lib/js/jquery.min.js"></script>
+    <script src="/lib/js/bootstrap.min.js"></script>
+    <script src="js/employeecrud.js"></script>
+</body>
+</html>
+    

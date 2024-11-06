@@ -1,0 +1,57 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>Employee Lookup</title>
+    <meta charset="utf-8" />
+    <link rel="icon" href="data:;base64,iVBORw0KGgo=">
+    <link href="/lib/css/bootstrap.min.css" rel="stylesheet" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+
+<body>
+    <div class="container-fluid">
+        <h1 class="text-center">Employee Lookup</h1>
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header text-center">
+                        Employee Information
+                    </div>
+                    <div class="card-body p-0">
+                        <div class="row">
+                            <div class="col-5 text-right" style="font-weight:bold;">Title:</div>
+                            <div class="col-7" id="title"></div>
+                        </div>
+                        <div class="row">
+                            <div class="col-5 text-right" style="font-weight:bold;">First Name:</div>
+                            <div class="col-7" id="firstname"></div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-5 text-right" style="font-weight:bold;">Last Name:</div>
+                            <div class="col-md-7 text-left" id="lastname"></div>
+                        </div>
+                        <div class="row">
+                            <div class="col-5" style="font-weight:bold;">Phone Number:</div>
+                            <div class="col-7" id="phone"></div>
+                        </div>
+                        <div class="row">
+                            <div class="col-5" style="font-weight:bold;">Email:</div>
+                            <div class="col-7">
+                                <input type="email" placeholder="Enter email" id="emailBox" class="form-control my-2" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-footer text-center">
+                        <input type="button" value="Find Employee" id="getbutton" />
+                        <div id="status" class="text-left mt-3 mb-2"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="/lib/js/jquery.min.js"></script>
+    <script src="/lib/js/bootstrap.min.js"></script>
+    <script src="/js/employeelookup.js"></script>
+</body>
+</html>
