@@ -1,0 +1,229 @@
+﻿
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f8f9fa;
+}
+
+.navbar {
+    background-color: #1d2ca4;
+}
+
+.navbar-dark .navbar-nav .nav-link {
+    color: #fff;
+}
+
+.employee-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    margin: 20px 0;
+}
+
+.employee-list-container {
+    width: 100%;
+    max-width: 90%;
+}
+
+.photo {
+    display: block;
+    margin: 20px auto;
+    width: 150px;
+    height: auto;
+    border-radius: 50%;
+    border: 2px solid #1d2ca4;
+}
+
+.employee-table {
+    width: 100%;
+    margin-top: 20px;
+    border-collapse: separate;
+    border-spacing: 0;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    background-color: #ffffff;
+}
+
+    .employee-table thead {
+        background-color: #1d2ca4;
+        color: #ffffff;
+        text-align: center;
+        font-weight: bold;
+    }
+
+    .employee-table th, .employee-table td {
+        padding: 15px;
+        border: 1px solid #dddddd;
+        text-align: center;
+    }
+
+    .employee-table tbody tr:nth-child(odd) {
+        background-color: #f9f9f9;
+    }
+
+    .employee-table tbody tr:hover {
+        background-color: #f1f1f1;
+        transition: background-color 0.3s ease;
+    }
+
+    .employee-table tbody td {
+        vertical-align: middle;
+    }
+
+    .employee-table .thead-light th {
+        border-top: 2px solid #1d2ca4;
+    }
+
+.employee-container p {
+    text-align: center;
+    font-weight: bold;
+    margin-top: 10px;
+}
+
+.modal-content {
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.modal-header {
+    background-color: #1d2ca4;
+    color: #fff;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    text-align: center;
+}
+
+.modal-title {
+    font-weight: bold;
+}
+
+.btn-close {
+    background: #fff;
+    color: #28a745;
+    border-radius: 50%;
+    border: 1px solid #fff;
+}
+
+.modal-body {
+    background-color: #f8f9fa;
+    padding: 20px;
+}
+
+    .modal-body .photo {
+        width: 120px;
+        height: auto;
+        border-radius: 50%;
+        border: 2px solid #1d2ca4;
+        margin-bottom: 10px;
+    }
+
+    .modal-body p {
+        color: #333;
+        font-weight: bold;
+        margin-top: -10px;
+        margin-bottom: 20px;
+    }
+
+.card {
+    border: 1px solid #28a745;
+    border-radius: 10px;
+}
+
+.card-header {
+    background-color: #28a745;
+    color: white;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    text-align: center;
+    font-weight: bold;
+}
+
+.card-body {
+    padding: 15px;
+    background-color: white;
+}
+
+.modal-footer {
+    background-color: #f8f9fa;
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+}
+
+    .modal-footer .btn {
+        padding: 10px 20px;
+        font-weight: bold;
+        border-radius: 5px;
+        transition: background-color 0.3s ease, color 0.3s ease;
+    }
+
+.btn-primary {
+    background-color: #28a745;
+    border: none;
+}
+
+    .btn-primary:hover {
+        background-color: #218838;
+    }
+
+.btn-secondary {
+    background-color: #6c757d;
+    border: none;
+}
+
+    .btn-secondary:hover {
+        background-color: #5a6268;
+    }
+
+.btn-danger {
+    background-color: #dc3545;
+    border: none;
+}
+
+    .btn-danger:hover {
+        background-color: #c82333;
+    }
+
+#dialog {
+    padding: 15px;
+    border: 2px solid #dc3545;
+    border-radius: 8px;
+    background-color: #f8d7da;
+    color: #721c24;
+}
+
+    #dialog strong {
+        font-size: 16px;
+    }
+
+    #dialog .mt-2 button {
+        width: 80px;
+    }
+
+.modal-footer #dialog {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    margin-top: 10px;
+}
+
+    .modal-footer #dialog .mt-2 {
+        display: flex;
+        justify-content: center;
+        gap: 10px;
+    }
+
+.form-control:focus {
+    border-color: #28a745;
+    box-shadow: 0 0 5px rgba(40, 167, 69, 0.5);
+}
+
+#topStatus {
+    margin-bottom: 20px;
+}
+
+table {
+    text-align: center;
+}
+
+
