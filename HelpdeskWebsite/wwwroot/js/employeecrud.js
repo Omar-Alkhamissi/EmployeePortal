@@ -4,6 +4,18 @@
         $('#dialog').slideDown(); // Slide down for a smooth appearance
     });
 
+    $('#srch').on('input', function () {
+        const searchValue = $(this).val().toLowerCase();
+        $('#employeeList tr').each(function () {
+            const rowText = $(this).text().toLowerCase();
+            if (rowText.includes(searchValue)) {
+                $(this).show();
+            } else {
+                $(this).hide();
+            }
+        });
+    });
+
     $('#yesbutton').on('click', async () => {
         const employeeId = $('#employeeId').val();
         const employeeLastName = $('#TextBoxSurname').val();
@@ -45,21 +57,22 @@
     });
 
 
+    // Shared event listener for input fields in both modals
+    $('input').on('input', function () {
+        const inputId = $(this).attr('id');
 
-    // Real-time validation for Update Modal
-    $('#TextBoxTitle').on('input', function () {
-        validateTitle($(this));
-        toggleUpdateButton();
-    });
+        // Check the input field and call the appropriate validation function
+        if (inputId === 'TextBoxTitle' || inputId === 'AddTextBoxTitle') {
+            validateTitle($(this));
+        } else if (inputId === 'TextBoxFirstName' || inputId === 'AddTextBoxFirstName') {
+            validateFirstName($(this));
+        } else if (inputId === 'TextBoxEmail' || inputId === 'AddTextBoxEmail') {
+            validateEmail($(this));
+        }
 
-    $('#TextBoxFirstName').on('input', function () {
-        validateFirstName($(this));
+        // Toggle buttons for respective modals
         toggleUpdateButton();
-    });
-
-    $('#TextBoxEmail').on('input', function () {
-        validateEmail($(this));
-        toggleUpdateButton();
+        toggleAddButton();
     });
 
     // Function to validate Title
@@ -119,6 +132,14 @@
         return isTitleValid && isFirstNameValid && isEmailValid;
     }
 
+    // Validation function for Add Modal
+    function validateAddEmployeeForm() {
+        const isTitleValid = validateTitle($('#AddTextBoxTitle'));
+        const isFirstNameValid = validateFirstName($('#AddTextBoxFirstName'));
+        const isEmailValid = validateEmail($('#AddTextBoxEmail'));
+        return isTitleValid && isFirstNameValid && isEmailValid;
+    }
+
     // Toggle the Update button visibility based on validation
     function toggleUpdateButton() {
         const isFormValid = validateEmployeeForm();
@@ -126,6 +147,16 @@
             $('#actionbutton').show(); // Show the button if valid
         } else {
             $('#actionbutton').hide(); // Hide the button if invalid
+        }
+    }
+
+    // Toggle the Add button visibility based on validation
+    function toggleAddButton() {
+        const isFormValid = validateAddEmployeeForm();
+        if (isFormValid) {
+            $('#addNewEmployeeButton').prop('disabled', false);
+        } else {
+            $('#addNewEmployeeButton').prop('disabled', true);
         }
     }
 

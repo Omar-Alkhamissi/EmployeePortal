@@ -1,5 +1,4 @@
-﻿
-body {
+﻿body {
     font-family: Arial, sans-serif;
     background-color: #f8f9fa;
 }
@@ -41,6 +40,7 @@ body {
     border-spacing: 0;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     background-color: #ffffff;
+    table-layout: fixed; /* Ensures equal column widths */
 }
 
     .employee-table thead {
@@ -54,6 +54,8 @@ body {
         padding: 15px;
         border: 1px solid #dddddd;
         text-align: center;
+        width: 33.33%; /* Equal width for each column */
+        word-wrap: break-word; /* Prevents overflow and wraps long text */
     }
 
     .employee-table tbody tr:nth-child(odd) {
@@ -225,5 +227,3 @@ body {
 table {
     text-align: center;
 }
-
-
