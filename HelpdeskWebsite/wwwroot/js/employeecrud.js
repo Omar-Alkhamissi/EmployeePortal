@@ -16,6 +16,36 @@
         });
     });
 
+    $('#uploader').on('change', function (event) {
+        var file = event.target.files[0];
+        if (file && file.type.match('image.*')) {
+            var reader = new FileReader();
+            reader.onload = function (e) {
+                var imageData = e.target.result;
+                $('#imageHolder').html('<img src="' + imageData + '" height="120" width="110" />');
+                $('#employeeModal').data('imageData', imageData);
+            }
+            reader.readAsDataURL(file);
+        } else {
+            alert('Please select a valid image file.');
+        }
+    });
+
+    $('#addUploader').on('change', function (event) {
+        var file = event.target.files[0];
+        if (file && file.type.match('image.*')) {
+            var reader = new FileReader();
+            reader.onload = function (e) {
+                var imageData = e.target.result;
+                $('#addImageHolder').html('<img src="' + imageData + '" height="120" width="110" />');
+                $('#addEmployeeModal').data('imageData', imageData);
+            }
+            reader.readAsDataURL(file);
+        } else {
+            alert('Please select a valid image file.');
+        }
+    });
+ 
     $('#yesbutton').on('click', async () => {
         const employeeId = $('#employeeId').val();
         const employeeLastName = $('#TextBoxSurname').val();
@@ -86,7 +116,13 @@
             return true;
         }
     }
-
+    function toggleAddButton(enable) {
+        if (enable) {
+            $("#addButton").show();
+        } else {
+            $("#addButton").hide();
+        }
+    }
     // Function to validate First Name
     function validateFirstName(inputField) {
         const value = inputField.val();
@@ -189,6 +225,12 @@
         $('#TextBoxEmail').val(employee.email);
         $('#TextBoxPhone').val(employee.phoneno);
 
+        if (employee.staffPicture64) {
+            $('#imageHolder').html(`<img src="data:image/png;base64,${employee.staffPicture64}" height="120" width="110" />`);
+        } else {
+            $('#imageHolder').html('');
+        }
+
         if (employee.department && employee.department.id) {
             $('#ddlDepartments').val(employee.department.id);
         } else {
@@ -210,16 +252,8 @@
         $('#TextBoxEmail').val('');
         $('#TextBoxPhone').val('');
         $('#ddlDepartments').val('');
-    }
-
-    // Function to clear all input fields in the Add Employee modal
-    function clearAddModalFields() {
-        $('#AddTextBoxTitle').val('');
-        $('#AddTextBoxFirstName').val('');
-        $('#AddTextBoxSurname').val('');
-        $('#AddTextBoxEmail').val('');
-        $('#AddTextBoxPhone').val('');
-        $('#AddDdlDepartments').val('');
+        $('#imageHolder').html('');
+        $('#employeeModal').removeData('imageData');
     }
 
     // Function to populate departments dropdowns in both modals
@@ -254,6 +288,12 @@
             phoneno: $('#AddTextBoxPhone').val(),
             departmentId: $('#AddDdlDepartments').val(),
         };
+        const imageData = $('#addEmployeeModal').data('imageData');
+        if (imageData) {
+            const base64Data = imageData.split(',')[1];
+            newEmployee.staffPicture64 = base64Data;
+        }
+
         try {
             const response = await fetch('/api/Employee', {
                 method: 'POST',
@@ -284,6 +324,12 @@
             phoneno: $('#TextBoxPhone').val(),
             departmentId: $('#ddlDepartments').val(),
         };
+        const imageData = $('#employeeModal').data('imageData');
+        if (imageData) {
+            const base64Data = imageData.split(',')[1];
+            updatedEmployee.staffPicture64 = base64Data;
+        }
+
 
         console.log("Updating employee with data:", updatedEmployee);
 
@@ -319,7 +365,7 @@
                 getAllEmployees();
             } else {
                 showTopStatusMessage("Failed to delete employee.", 'danger');
-            }
+            }   
         } catch (error) {
             console.error("Error deleting employee:", error);
             showTopStatusMessage("Error deleting employee.", 'danger');

@@ -121,7 +121,16 @@ namespace CasestudyTests
                 Assert.True(false);
             }
         }
+
+        [Fact]
+        public async Task Employee_LoadPicsTest()
+        {
+            {
+                PicsUtility util = new();
+                Assert.True(await util.AddEmployeePicsToDb());
+            }
+        }
     }
-   
+
 }
 

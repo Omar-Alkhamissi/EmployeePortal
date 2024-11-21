@@ -72,6 +72,7 @@ namespace HelpdeskViewModels
                     Email = Email,
                     DepartmentId = DepartmentId,
                     StaffPicture = StaffPicture64 != null ? Convert.FromBase64String(StaffPicture64!) : null
+                    //StaffPicture = Convert.FromBase64String(StaffPicture64!)
                 };
                 Id = await _dao.Add(emp);
             }
@@ -116,6 +117,11 @@ namespace HelpdeskViewModels
                         DepartmentName = emp.Department.DepartmentName,
                         Timer = Convert.ToBase64String(emp.Timer!)
                     };
+
+                    if (emp.StaffPicture != null)
+                    {
+                        empVm.StaffPicture64 = Convert.ToBase64String(emp.StaffPicture);
+                    }
                     allVms.Add(empVm);
                 }
             }
