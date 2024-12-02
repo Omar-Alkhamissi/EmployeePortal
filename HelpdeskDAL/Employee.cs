@@ -21,5 +21,9 @@ public partial class Employee : EmployeeEntity
 
     public byte[]? StaffPicture { get; set; }
 
+    public virtual ICollection<Call> CallEmployees { get; set; } = new List<Call>();
+
+    public virtual ICollection<Call> CallTeches { get; set; } = new List<Call>();
+
     public virtual Department Department { get; set; } = null!;
 }

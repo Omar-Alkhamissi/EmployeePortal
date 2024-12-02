@@ -1,391 +1,353 @@
-﻿$(function () {
-    // Show delete confirmation dialog when Delete button is clicked
-    $('#deletebutton').on('click', () => {
-        $('#dialog').slideDown(); // Slide down for a smooth appearance
+﻿$(() => { // main jQuery routine - executes every on page load, $ is short for jquery
+
+
+
+    // Keyup listener for real-time validation feedback
+    document.addEventListener("keyup", () => {
+        $("#modalstatus").removeClass(); // Remove any existing CSS classes
+        if ($("#EmployeeModalForm").valid()) {
+            $("#modalstatus").attr("class", "badge bg-success"); // Green badge for valid data
+            $("#modalstatus").text("Data entered is valid");
+        } else {
+            $("#modalstatus").attr("class", "badge bg-danger"); // Red badge for invalid data
+            $("#modalstatus").text("Fix errors");
+        }
     });
 
-    $('#srch').on('input', function () {
-        const searchValue = $(this).val().toLowerCase();
-        $('#employeeList tr').each(function () {
-            const rowText = $(this).text().toLowerCase();
-            if (rowText.includes(searchValue)) {
-                $(this).show();
-            } else {
-                $(this).hide();
+    // Initialize jQuery Validation
+    $("#EmployeeModalForm").validate({
+        rules: {
+            TextBoxTitle: { maxlength: 4, required: true, validTitle: true },
+            TextBoxFirst: { maxlength: 25, required: true },
+            TextBoxLast: { maxlength: 25, required: true },
+            TextBoxEmail: { maxlength: 40, required: true, email: true },
+            TextBoxPhone: { maxlength: 15, required: true }
+        },
+        errorElement: "div", // Display error messages in <div>
+        errorPlacement: (error, element) => {
+            error.addClass("text-warning"); // Add a Bootstrap class for styling
+            error.insertAfter(element); // Place the error message after the input
+        },
+        messages: {
+            TextBoxTitle: {
+                required: "Required 1-4 chars.",
+                maxlength: "Maximum 4 chars.",
+                validTitle: "Valid titles: Mr., Ms., Mrs., Dr."
+            },
+            TextBoxFirst: {
+                required: "Required 1-25 chars.",
+                maxlength: "Maximum 25 chars."
+            },
+            TextBoxLast: {
+                required: "Required 1-25 chars.",
+                maxlength: "Maximum 25 chars."
+            },
+            TextBoxPhone: {
+                required: "Required 1-15 chars.",
+                maxlength: "Maximum 15 chars."
+            },
+            TextBoxEmail: {
+                required: "Required 1-40 chars.",
+                maxlength: "Maximum 40 chars.",
+                email: "Enter a valid email address."
             }
-        });
-    });
-
-    $('#uploader').on('change', function (event) {
-        var file = event.target.files[0];
-        if (file && file.type.match('image.*')) {
-            var reader = new FileReader();
-            reader.onload = function (e) {
-                var imageData = e.target.result;
-                $('#imageHolder').html('<img src="' + imageData + '" height="120" width="110" />');
-                $('#employeeModal').data('imageData', imageData);
-            }
-            reader.readAsDataURL(file);
-        } else {
-            alert('Please select a valid image file.');
         }
     });
 
-    $('#addUploader').on('change', function (event) {
-        var file = event.target.files[0];
-        if (file && file.type.match('image.*')) {
-            var reader = new FileReader();
-            reader.onload = function (e) {
-                var imageData = e.target.result;
-                $('#addImageHolder').html('<img src="' + imageData + '" height="120" width="110" />');
-                $('#addEmployeeModal').data('imageData', imageData);
-            }
-            reader.readAsDataURL(file);
-        } else {
-            alert('Please select a valid image file.');
-        }
-    });
- 
-    $('#yesbutton').on('click', async () => {
-        const employeeId = $('#employeeId').val();
-        const employeeLastName = $('#TextBoxSurname').val();
-
-        if (employeeId) {
-            await deleteEmployee(employeeId);
-            $('#dialog').hide();
-            showTopStatusMessage(`Employee ${employeeLastName} deleted successfully!`, 'success');
-            $('#employeeModal').modal('hide');
-            getAllEmployees();
-        }
-    });
-
-    $('#nobutton').on('click', () => {
-        $('#dialog').slideUp();
-        showModalStatusMessage("Delete cancelled", 'info');
-    });
-
-    $('#actionbutton').on('click', async () => {
-        if ($('#employeeId').val() && !validateEmployeeForm()) {
-            return; // Do not proceed if validation fails for update
-        }
-
-        const employeeId = $('#employeeId').val();
-        if (employeeId) {
-            console.log("Updating employee with ID:", employeeId);
-            await updateEmployee(employeeId);
-        } else {
-            console.log("Adding new employee");
-            await addEmployee();
-        }
-        getAllEmployees();
-    });
-  
-    $('#addEmployeeButton').on('click', () => {
-        clearAddModalFields();
-        $('#addEmployeeModal').modal('show');
-        $('#employeeModal').modal('hide');
-    });
+    // Custom Validation Rule for Title
+    $.validator.addMethod("validTitle", (value) => {
+        return ["Mr.", "Ms.", "Mrs.", "Dr."].includes(value);
+    }, "Invalid title");
 
 
-    // Shared event listener for input fields in both modals
-    $('input').on('input', function () {
-        const inputId = $(this).attr('id');
+    const loadDepartmentDDL = (empdiv) => {
+        html = '';
+        $('#ddlDepartment').empty();
+        let alldepartnments = JSON.parse(sessionStorage.getItem('alldepartments'));
+        alldepartnments.forEach((div) => { html += `<option value="${div.id}">${div.name}</option>` });
+        $('#ddlDepartment').append(html);
+        $('#ddlDepartment').val(empdiv);
+    }; // loadDivisionDDL
 
-        // Check the input field and call the appropriate validation function
-        if (inputId === 'TextBoxTitle' || inputId === 'AddTextBoxTitle') {
-            validateTitle($(this));
-        } else if (inputId === 'TextBoxFirstName' || inputId === 'AddTextBoxFirstName') {
-            validateFirstName($(this));
-        } else if (inputId === 'TextBoxEmail' || inputId === 'AddTextBoxEmail') {
-            validateEmail($(this));
-        }
 
-        // Toggle buttons for respective modals
-        toggleUpdateButton();
-        toggleAddButton();
-    });
-
-    // Function to validate Title
-    function validateTitle(inputField) {
-        const value = inputField.val();
-        if (!['Mr.', 'Ms.', 'Mrs.', 'Dr.'].includes(value)) {
-            showValidationMessage(inputField, "Title must be Mr., Ms., Mrs., or Dr.");
-            return false;
-        } else {
-            clearValidationMessage(inputField);
-            return true;
-        }
-    }
-    function toggleAddButton(enable) {
-        if (enable) {
-            $("#addButton").show();
-        } else {
-            $("#addButton").hide();
-        }
-    }
-    // Function to validate First Name
-    function validateFirstName(inputField) {
-        const value = inputField.val();
-        if (!value || value.length < 1 || value.length > 25) {
-            showValidationMessage(inputField, "First Name must be 1-25 characters long.");
-            return false;
-        } else {
-            clearValidationMessage(inputField);
-            return true;
-        }
-    }
-
-    // Function to validate Email
-    function validateEmail(inputField) {
-        const value = inputField.val();
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (!emailRegex.test(value)) {
-            showValidationMessage(inputField, "Email must be in a valid format (e.g., name@example.com).");
-            return false;
-        } else {
-            clearValidationMessage(inputField);
-            return true;
-        }
-    }
-
-    // Function to show validation message under the input field
-    function showValidationMessage(inputField, message) {
-        if (inputField.next('.validation-message').length === 0) {
-            inputField.after(`<div class="validation-message text-danger">${message}</div>`);
-        }
-    }
-
-    // Function to clear validation message
-    function clearValidationMessage(inputField) {
-        inputField.next('.validation-message').remove();
-    }
-
-    // Validation function for Update Modal
-    function validateEmployeeForm() {
-        const isTitleValid = validateTitle($('#TextBoxTitle'));
-        const isFirstNameValid = validateFirstName($('#TextBoxFirstName'));
-        const isEmailValid = validateEmail($('#TextBoxEmail'));
-        return isTitleValid && isFirstNameValid && isEmailValid;
-    }
-
-    // Toggle the Update button visibility based on validation
-    function toggleUpdateButton() {
-        const isFormValid = validateEmployeeForm();
-        if (isFormValid) {
-            $('#actionbutton').show(); // Show the button if valid
-        } else {
-            $('#actionbutton').hide(); // Hide the button if invalid
-        }
-    }
-
-    // Function to fetch and display all employees
-    async function getAllEmployees() {
+    const getAll = async (msg) => {
         try {
-            const response = await fetch('/api/Employee');
+            $("#employeeList").text("Finding employee Information...");
+            let response = await fetch(`api/employee`);
             if (response.ok) {
-                const employees = await response.json();
-                console.log("Employee list after update:", employees);
-                displayEmployeeList(employees);
-            } else {
-                console.error("Failed to load employees.");
-            }
-        } catch (error) {
-            console.error("Error loading employees:", error);
-        }
-    }
+                let payload = await response.json(); // this returns a promise, so we await it
+                buildEmployeeList(payload);
+                msg === "" ? // are we appending to an existing message
+                    $("#status").text("Employees Loaded") : $("#status").text(`${msg} - Employees Loaded`);
+            } else if (response.status !== 404) { // probably some other client side error
+                let problemJson = await response.json();
+                errorRtn(problemJson, response.status);
+            } else { // else 404 not found
+                $("#status").text("no such path on server");
+            } // else
 
-    // Function to display employees in the table
-    function displayEmployeeList(employees) {
-        const employeeList = $('#employeeList');
-        employeeList.empty();
-
-        employees.forEach(emp => {
-            const employeeRow = $(`
-                <tr>
-                    <td>${emp.title}</td>
-                    <td>${emp.firstname}</td>
-                    <td>${emp.lastname}</td>
-                </tr>
-            `);
-
-            employeeRow.on('click', () => {
-                openEmployeeModal(emp);
-            });
-
-            employeeList.append(employeeRow);
-        });
-    }
-
-    function openEmployeeModal(employee) {
-        console.log("Opening modal for Employee ID:", employee.id);
-
-        $('#TextBoxTitle').val(employee.title);
-        $('#TextBoxFirstName').val(employee.firstname);
-        $('#TextBoxSurname').val(employee.lastname);
-        $('#TextBoxEmail').val(employee.email);
-        $('#TextBoxPhone').val(employee.phoneno);
-
-        if (employee.staffPicture64) {
-            $('#imageHolder').html(`<img src="data:image/png;base64,${employee.staffPicture64}" height="120" width="110" />`);
-        } else {
-            $('#imageHolder').html('');
-        }
-
-        if (employee.department && employee.department.id) {
-            $('#ddlDepartments').val(employee.department.id);
-        } else {
-            $('#ddlDepartments').val("");
-        }
-
-        $('#employeeId').val(employee.id || "");
-        $('#employeeModal').modal('show');
-        $('#addEmployeeModal').modal('hide');
-        toggleUpdateButton();
-    }
-
-    // Function to clear all input fields in the Update/Delete modal
-    function clearModalFields() {
-        $('#employeeId').val('');
-        $('#TextBoxTitle').val('');
-        $('#TextBoxFirstName').val('');
-        $('#TextBoxSurname').val('');
-        $('#TextBoxEmail').val('');
-        $('#TextBoxPhone').val('');
-        $('#ddlDepartments').val('');
-        $('#imageHolder').html('');
-        $('#employeeModal').removeData('imageData');
-    }
-
-    // Function to populate departments dropdowns in both modals
-    async function populateDepartments() {
-        try {
-            const response = await fetch('/api/Department');
+            response = await fetch(`api/department`);
             if (response.ok) {
-                const departments = await response.json();
-                $('#ddlDepartments, #AddDdlDepartments').empty();
-
-                departments.forEach(dept => {
-                    const option = `<option value="${dept.id}">${dept.departmentName}</option>`;
-                    $('#ddlDepartments').append(option);
-                    $('#AddDdlDepartments').append(option);
-                });
-            } else {
-                console.error("Failed to load departments.");
-            }
+                let divs = await response.json(); // this returns a promise, so we await it
+                sessionStorage.setItem("alldepartments", JSON.stringify(divs));
+            } else if (response.status !== 404) { // probably some other client side error
+                let problemJson = await response.json();
+                errorRtn(problemJson, response.status);
+            } else { // else 404 not found
+                $("#status").text("no such path on server");
+            } // else
         } catch (error) {
-            console.error("Error loading departments:", error);
+            $("#status").text(error.message);
         }
-    }
+    }; // getAll
 
 
-    // Function to add an employee (called by Add Employee modal)
-    $('#addNewEmployeeButton').on('click', async () => {
-        const newEmployee = {
-            title: $('#AddTextBoxTitle').val(),
-            firstname: $('#AddTextBoxFirstName').val(),
-            lastname: $('#AddTextBoxSurname').val(),
-            email: $('#AddTextBoxEmail').val(),
-            phoneno: $('#AddTextBoxPhone').val(),
-            departmentId: $('#AddDdlDepartments').val(),
-        };
-        const imageData = $('#addEmployeeModal').data('imageData');
-        if (imageData) {
-            const base64Data = imageData.split(',')[1];
-            newEmployee.staffPicture64 = base64Data;
-        }
+    const buildEmployeeList = (data, usealldata = true) => {
+        $("#employeeList").empty();
+        div = $(`<div class="list-group-item text-white bg-secondary row d-flex" id="status">Employee Info</div>
+                 <div class= "list-group-item row d-flex text-center" id="heading">
+                 <div class="col-4 h4">Title</div>
+                 <div class="col-4 h4">First</div>
+                 <div class="col-4 h4">Last</div>
+                 </div>`);
+        div.appendTo($("#employeeList"));
+        usealldata ? sessionStorage.setItem("allemployees", JSON.stringify(data)) : null;
+        btn = $(`<button class="list-group-item row d-flex" id="0">...click to add employee</button>`);
+        btn.appendTo($("#employeeList"));
+        data.forEach(emp => {
+            btn = $(`<button class="list-group-item row d-flex" id="${emp.id}">`);
+            btn.html(`<div class="col-4" id="employeetitle${emp.id}">${emp.title}</div>
+                     <div class="col-4" id="employeefname${emp.id}">${emp.firstname}</div>
+                     <div class="col-4" id="employeelastnam${emp.id}">${emp.lastname}</div>`
+                                );
+            btn.appendTo($("#employeeList"));
+        }); // forEach
+    }; // buildEmployeeList
+    getAll(""); // first grab the data from the server
 
+    const update = async (e) => {
+        // action button click event handler
         try {
-            const response = await fetch('/api/Employee', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(newEmployee),
+            // set up a new client side instance of Employee
+            let emp = JSON.parse(sessionStorage.getItem("employee"));
+            // pouplate the properties
+            emp.title = $("#TextBoxTitle").val();
+            emp.phoneno = $("#TextBoxPhone").val();
+            emp.firstname = $("#TextBoxFirst").val();
+            emp.lastname = $("#TextBoxLast").val();
+            emp.email = $("#TextBoxEmail").val();
+            emp.departmentId = parseInt($("#ddlDepartment").val());
+
+            // send the updated back to the server asynchronously using Http PUT
+            let response = await fetch("api/employee", {
+                method: "PUT",
+                headers: { "Content-Type": "application/json; charset=utf-8" },
+                body: JSON.stringify(emp),
             });
             if (response.ok) {
-                showTopStatusMessage("Employee added successfully!", 'success');
-                $('#addEmployeeModal').modal('hide');
-                getAllEmployees();
+                // or check for response.status
+                let payload = await response.json();
+                getAll(payload.msg);
+
+                $("#status").text(payload.msg)
+                $("#theModal").modal("toggle");
+
+            } else if (response.status !== 404) {
+                // probably some other client side error
+                let problemJson = await response.json();
+                errorRtn(problemJson, response.status);
             } else {
-                showModalStatusMessage("Failed to add employee.", 'danger');
-            }
+                // else 404 not found
+                $("#status").text("no such path on server");
+            } // else
         } catch (error) {
-            console.error("Error adding employee:", error);
-            showModalStatusMessage("Error adding employee.", 'danger');
+            $("#status").text(error.message);
+            console.table(error);
+        } // try/catch
+        getAll(payload.msg);
+
+    }; // update
+
+    $("#employeeList").on('click', (e) => {
+        if (!e) e = window.event;
+        let id = e.target.parentNode.id;
+        if (id === "employeeList" || id === "") {
+            id = e.target.id;
+        } // clicked on row somewhere else
+        if (id !== "status" && id !== "heading") {
+            let data = JSON.parse(sessionStorage.getItem("allemployees"));
+            id === "0" ? setupForAdd() : setupForUpdate(id, data);
+
+        } else {
+            return false; // ignore if they clicked on heading or status
         }
-    });
+    }); // employeeListClick
 
-    // Function to update an employee
-    async function updateEmployee(id) {
-        const updatedEmployee = {
-            id,
-            title: $('#TextBoxTitle').val(),
-            firstname: $('#TextBoxFirstName').val(),
-            lastname: $('#TextBoxSurname').val(),
-            email: $('#TextBoxEmail').val(),
-            phoneno: $('#TextBoxPhone').val(),
-            departmentId: $('#ddlDepartments').val(),
-        };
-        const imageData = $('#employeeModal').data('imageData');
-        if (imageData) {
-            const base64Data = imageData.split(',')[1];
-            updatedEmployee.staffPicture64 = base64Data;
-        }
+    const clearModalFields = () => {
+        loadDepartmentDDL(-1);
+        $("#TextBoxTitle").val("");
+        $("#TextBoxPhone").val("");
+        $("#TextBoxFirst").val("");
+        $("#TextBoxLast").val("");
+        $("#TextBoxEmail").val("");
+        // clean out the other four text boxes go here as well
+        sessionStorage.removeItem("employee");
+        sessionStorage.removeItem("staffPicture64");
+        $("#uploadstatus").text("");
+        $("#imageHolder").html("");
+        $("#uploader").val("")
+        $("#theModal").modal("toggle");
+        let validator = $("#EmployeeModalForm").validate();
+        validator.resetForm();
+
+    }; // clearModalFields
+
+    const setupForAdd = () => {
+        $("#actionbutton").val("add");
+        $("#modaltitle").html("<h4>add employee</h4>");
+        $("#theModal").modal("toggle");
+        $("#modalstatus").text("add new employee");
+        $("#theModalLabel").text("Add");
+        clearModalFields();
+    }; // setupForAdd
+
+    const setupForUpdate = (id, data) => {
+        $("#actionbutton").val("update");
+        $("#modaltitle").html("<h4>update employee</h4>");
+        clearModalFields();
+        data.forEach(employee => {
+            if (employee.id === parseInt(id)) {
+                $("#TextBoxTitle").val(employee.title);
+                $("#TextBoxPhone").val(employee.phoneno);
+                $("#TextBoxFirst").val(employee.firstname);
+                $("#TextBoxLast").val(employee.lastname);
+                $("#TextBoxEmail").val(employee.email);
+                $("#imageHolder").html(`<img height="120" width="110" src="data:img/png;base64,${employee.staffPicture64}" />`);
+
+                sessionStorage.setItem("employee", JSON.stringify(employee));
+                $("#modalstatus").text("update data");
+                $("#theModal").modal("toggle");
+                $("#theModalLabel").text("Update");
+
+                loadDepartmentDDL(employee.departmentId);
 
 
-        console.log("Updating employee with data:", updatedEmployee);
+            } // if
+        }); // data.forEach
+    }; // setupForUpdate
 
+    const add = async () => {
         try {
-            const response = await fetch('/api/Employee', {
-                method: 'PUT',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(updatedEmployee),
+            emp = new Object();
+            emp.isTech = null;
+            emp.title = $("#TextBoxTitle").val();
+            emp.phoneno = $("#TextBoxPhone").val();
+            emp.firstname = $("#TextBoxFirst").val();
+            emp.lastname = $("#TextBoxLast").val();
+            emp.email = $("#TextBoxEmail").val();
+            emp.departmentId = parseInt($("#ddlDepartment").val());
+            // populate the other four properties here from the text box contents
+            emp.id = -1;
+            emp.timer = null;
+            emp.staffpicture64 = null;
+            // send the employee info to the server asynchronously using POST
+            let response = await fetch("api/employee", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json; charset=utf-8"
+                },
+                body: JSON.stringify(emp)
             });
-
-            if (response.ok) {
-                showTopStatusMessage("Employee updated successfully!", 'success');
-                $('#employeeModal').modal('hide');
-                getAllEmployees();
-            } else {
-                const errorText = await response.json();
-                showModalStatusMessage(errorText.msg || "Failed to update employee.", 'danger');
-            }
+            if (response.ok) // or check for response.status
+            {
+                let data = await response.json();
+                getAll(data.msg);
+            } else if (response.status !== 404) { // probably some other client side error
+                let problemJson = await response.json();
+                errorRtn(problemJson, response.status);
+            } else { // else 404 not found
+                $("#status").text("no such path on server");
+            } // else
         } catch (error) {
-            console.error("Error updating employee:", error);
-            showModalStatusMessage("Error updating employee.", 'danger');
-        }
-    }
+            $("#status").text(error.message);
+        } // try/catch
+        $("#theModal").modal("toggle");
+    }; // add
 
-    async function deleteEmployee(id) {
+    $("#actionbutton").on("click", () => {
+        $("#actionbutton").val() === "update" ? update() : add();
+    }); // actionbutton click
+
+
+    const _delete = async () => {
+        let employee = JSON.parse(sessionStorage.getItem("employee"));
         try {
-            const response = await fetch(`/api/Employee/${id}`, {
+            let response = await fetch(`api/employee/${employee.id}`, {
                 method: 'DELETE',
+                headers: { 'Content-Type': 'application/json; charset=utf-8' }
             });
-            if (response.ok) {
-                const deletedEmployee = await response.json();
-                showTopStatusMessage(`Employee ${deletedEmployee.lastname} deleted successfully!`, 'success');
-                getAllEmployees();
+            if (response.ok) // or check for response.status
+            {
+                let data = await response.json();
+                getAll(data.msg);
             } else {
-                showTopStatusMessage("Failed to delete employee.", 'danger');
-            }   
+                $('#status').text(`Status - ${response.status}, Problem on delete server side, see server console`);
+            } // else
+            $('#theModal').modal('toggle');
         } catch (error) {
-            console.error("Error deleting employee:", error);
-            showTopStatusMessage("Error deleting employee.", 'danger');
+            $('#status').text(error.message);
         }
-    }
+    }; // _delete
 
-    document.addEventListener('DOMContentLoaded', function () {
-        $('#topStatus').show().text('');
-        $('#actionbutton').hide(); // Initially hide the update button
+    $("input:file").on("change", () => {
+        try {
+            const reader = new FileReader();
+            const file = $("#uploader")[0].files[0];
+            $("#uploadstatus").text("");
+            file ? reader.readAsBinaryString(file) : null;
+            reader.onload = (readerEvt) => {
+                // get binary data then convert to encoded string
+                const binaryString = reader.result;
+                const encodedString = btoa(binaryString);
+                // replace the picture in session storage
+                let employee = JSON.parse(sessionStorage.getItem("employee"));
+                employee.staffPicture64 = encodedString;
+                sessionStorage.setItem("employee", JSON.stringify(employee));
+                $("#uploadstatus").text("retrieved local pic")
+            };
+        } catch (error) {
+            $("#uploadstatus").text("pic upload failed")
+        }
+    }); // input file change
+
+
+    $("#yesbutton").on("click", () => {
+        _delete();
+    }); // deletebutton click
+
+    $("#srch").on("keyup", () => {
+        let alldata = JSON.parse(sessionStorage.getItem("allemployees"));
+        let filtereddata = alldata.filter((emp) => emp.lastname.match(new RegExp($("#srch").val(), 'i')));
+        buildEmployeeList(filtereddata, false);
+    }); // srch keyup
+
+
+    $("#dialog").hide();
+    $("#dialogbutton").on("click", (e) => {
+        $("#dialog").show();
+        $("#status").text("");
+        $("#dialogbutton").hide();
+    });
+    $("#nobutton").on("click", (e) => {
+        $("#dialog").hide();
+        $("#status").text("second thoughts eh?");
+        $("#dialogbutton").show();
+    });
+    $("#yesbutton").on("click", () => {
+        $("#dialog").hide();
+        $("#status").text("way to go for it!");
+        $("#dialogbutton").show();
     });
 
-    function showTopStatusMessage(message, type) {
-        const topStatus = $('#topStatus');
-        topStatus.text(message).attr('class', `alert alert-${type} text-center`).show();
-    }
+}); // jQuery ready method
 
-    function showModalStatusMessage(message, type) {
-        $('#modalstatus').text(message).attr('class', `text-center alert alert-${type}`).show();
-    }
-
-    populateDepartments();
-    getAllEmployees();
-});

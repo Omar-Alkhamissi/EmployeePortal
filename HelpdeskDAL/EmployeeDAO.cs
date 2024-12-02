@@ -9,19 +9,42 @@ using System.Threading.Tasks;
 
 namespace HelpdeskDAL
 {
-    public class EmployeeDAO 
+    public class EmployeeDAO
     {
         readonly IRepository<Employee> _repo;
         public EmployeeDAO()
         {
             _repo = new HelpdeskRepository<Employee>();
         }
-        public async Task<Employee> GetByLastname(string name)
+
+        public async Task<Employee?> GetByLastname(string name)
         {
             Employee? selectedEmployee;
             try
             {
-                selectedEmployee = await _repo.GetOne(stu => stu.LastName == name);
+                Debug.WriteLine($"Searching for employee with LastName: {name}");
+                selectedEmployee = await _repo.GetOne(emp => emp.LastName == name);
+                if (selectedEmployee == null)
+                {
+                    Debug.WriteLine($"No employee found with LastName: {name}");
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"Problem in {GetType().Name}.{MethodBase.GetCurrentMethod()!.Name}: {ex.Message}");
+                throw;
+            }
+            return selectedEmployee;
+        }
+
+
+        public async Task<Employee> GetByEmail(string Email)
+        {
+            Employee? selectedEmployee;
+            try
+            {
+                selectedEmployee = await _repo.GetOne(emp => emp.Email ==
+               Email);
             }
             catch (Exception ex)
             {
@@ -31,8 +54,65 @@ namespace HelpdeskDAL
             }
             return selectedEmployee!;
         }
+
+        public async Task<Employee> GetById(int Id)
+        {
+            Employee? selectedEmployee;
+            try
+            {
+                selectedEmployee = await _repo.GetOne(emp => emp.Id ==
+               Id);
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine("Problem in " + GetType().Name + " " +
+                MethodBase.GetCurrentMethod()!.Name + " " + ex.Message);
+                throw;
+            }
+            return selectedEmployee!;
+        }
+
+        public async Task<List<Employee>> GetAll()
+        {
+            List<Employee> selectedEmployee = new List<Employee>();
+            try
+            {
+
+                selectedEmployee = await _repo.GetAll();
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine("Problem in " + GetType().Name + " " +
+                MethodBase.GetCurrentMethod()!.Name + " " + ex.Message);
+                throw;
+            }
+            return selectedEmployee;
+        }
+
+        public async Task<Employee> GetByPhone(string Phone)
+        {
+            Employee? selectedEmployee;
+            try
+            {
+                selectedEmployee = await _repo.GetOne(emp => emp.PhoneNo ==
+               Phone);
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine("Problem in " + GetType().Name + " " +
+                MethodBase.GetCurrentMethod()!.Name + " " + ex.Message);
+                throw;
+            }
+            return selectedEmployee!;
+        }
+
         public async Task<int> Add(Employee newEmployee)
         {
+            var existingEmployee = await _repo.GetOne(emp => emp.LastName == newEmployee.LastName);
+            if (existingEmployee != null)
+            {
+                throw new InvalidOperationException("An employee with this lastname already exists.");
+            }
             try
             {
                 await _repo.Add(newEmployee);
@@ -45,94 +125,24 @@ namespace HelpdeskDAL
             }
             return newEmployee.Id;
         }
-        public async Task<int> Delete(int? id)
-        {
-            int EmployeeDeleted = -1;
-            try
-            {
-                EmployeeDeleted = await _repo.Delete((int)id!);
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine("Problem in " + GetType().Name + " " +
-                MethodBase.GetCurrentMethod()!.Name + " " + ex.Message);
-                throw;
-            }
-            return EmployeeDeleted;
-        }
 
-        public async Task<List<Employee>> GetAll()
-        {
-            List<Employee> allEmployees;
-            try
-            {
-                allEmployees = await _repo.GetAll();
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine("Problem in " + GetType().Name + " " +
-                MethodBase.GetCurrentMethod()!.Name + " " + ex.Message);
-                throw;
-            }
-            return allEmployees;
-        }
-
-        public async Task<Employee> GetByEmail(string email)
-        {
-            Employee? selectedEmployee;
-            try
-            {
-                HelpdeskContext _db = new();
-                selectedEmployee = await _db.Employees.FirstOrDefaultAsync(emp => emp.Email == email);
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine("Problem in " + GetType().Name + " " +
-                MethodBase.GetCurrentMethod()!.Name + " " + ex.Message);
-                throw;
-            }
-            return selectedEmployee!;
-        }
-
-        public async Task<Employee> GetByID(int id)
-        {
-            Employee? selectedEmployee;
-            try
-            {
-                selectedEmployee = await _repo.GetOne(stu => stu.Id == id);
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine("Problem in " + GetType().Name + " " +
-                MethodBase.GetCurrentMethod()!.Name + " " + ex.Message);
-                throw;
-            }
-            return selectedEmployee!;
-        }
-
-        public async Task<Employee> GetByPhoneNumber(string PhoneNumber)
-        {
-            Employee? selectedEmployee;
-            try
-            {
-                selectedEmployee = await _repo.GetOne(stu => stu.PhoneNo == PhoneNumber);
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine("Problem in " + GetType().Name + " " +
-                MethodBase.GetCurrentMethod()!.Name + " " + ex.Message);
-                throw;
-            }
-            return selectedEmployee!;
-        }
-
-        public async Task<UpdateStatus> Update(Employee updatedEmpolyee)
+        public async Task<UpdateStatus> Update(Employee updatedEmployee)
         {
             UpdateStatus status;
 
+            status = await _repo.Update(updatedEmployee);
+
+            return status;
+        }
+
+
+        public async Task<int> Delete(int? id)
+        {
+
+            int employeeDeleted;
             try
             {
-                status = await _repo.Update(updatedEmpolyee);
+                employeeDeleted = await _repo.Delete((int)id!);
             }
             catch (Exception ex)
             {
@@ -140,7 +150,7 @@ namespace HelpdeskDAL
                 MethodBase.GetCurrentMethod()!.Name + " " + ex.Message);
                 throw;
             }
-            return status;
+            return employeeDeleted;
         }
 
     }

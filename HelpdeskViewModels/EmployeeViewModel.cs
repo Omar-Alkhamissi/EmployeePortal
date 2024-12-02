@@ -23,10 +23,12 @@ namespace HelpdeskViewModels
         public int? Id { get; set; }
         public bool? IsTech { get; set; }
         public string? StaffPicture64 { get; set; }
+        // constructor
         public EmployeeViewModel()
         {
             _dao = new EmployeeDAO();
         }
+
         public async Task GetByLastname()
         {
             try
@@ -58,6 +60,142 @@ namespace HelpdeskViewModels
                 throw;
             }
         }
+
+        public async Task GetById()
+        {
+            try
+            {
+                Employee emp = await _dao.GetById((int)(Id!));
+                Title = emp.Title;
+                Firstname = emp.FirstName;
+                Lastname = emp.LastName;
+                Phoneno = emp.PhoneNo;
+                Email = emp.Email;
+                Id = emp.Id;
+                DepartmentId = emp.DepartmentId;
+                if (emp.StaffPicture != null)
+                {
+                    StaffPicture64 = Convert.ToBase64String(emp.StaffPicture);
+                }
+                Timer = Convert.ToBase64String(emp.Timer!);
+            }
+            catch (NullReferenceException nex)
+            {
+                Debug.WriteLine(nex.Message);
+                Lastname = "not found";
+            }
+            catch (Exception ex)
+            {
+                Lastname = "not found";
+                Debug.WriteLine("Problem in " + GetType().Name + " " +
+                MethodBase.GetCurrentMethod()!.Name + " " + ex.Message);
+                throw;
+            }
+        }
+
+        public async Task GetByEmail()
+        {
+            try
+            {
+                Employee emp = await _dao.GetByEmail(Email!);
+                Title = emp.Title;
+                Firstname = emp.FirstName;
+                Lastname = emp.LastName;
+                Phoneno = emp.PhoneNo;
+                Email = emp.Email;
+                Id = emp.Id;
+                DepartmentId = emp.DepartmentId;
+                if (emp.StaffPicture != null)
+                {
+                    StaffPicture64 = Convert.ToBase64String(emp.StaffPicture);
+                }
+                Timer = Convert.ToBase64String(emp.Timer!);
+            }
+            catch (NullReferenceException nex)
+            {
+                Debug.WriteLine(nex.Message);
+                Lastname = "not found";
+            }
+            catch (Exception ex)
+            {
+                Lastname = "not found";
+                Debug.WriteLine("Problem in " + GetType().Name + " " +
+                MethodBase.GetCurrentMethod()!.Name + " " + ex.Message);
+                throw;
+            }
+        }
+
+        public async Task<List<EmployeeViewModel>> GetAll()
+        {
+            List<EmployeeViewModel> allEmpVms = new();
+            try
+            {
+                List<Employee> allEmployee = await _dao.GetAll();
+                // we need to convert empdent instance to empdentViewModel because
+                // the Web Layer isn't aware of the Domain class empdent
+                foreach (Employee emp in allEmployee)
+                {
+                    EmployeeViewModel empVm = new()
+                    {
+                        Title = emp.Title,
+                        Firstname = emp.FirstName,
+                        Lastname = emp.LastName,
+                        Phoneno = emp.PhoneNo,
+                        Email = emp.Email,
+                        Id = emp.Id,
+                        DepartmentId = emp.DepartmentId,
+                        DepartmentName = emp.Department.DepartmentName,
+
+                        // binary value needs to be stored on client as base64
+                        Timer = Convert.ToBase64String(emp.Timer!)
+                    };
+
+                    if (emp.StaffPicture != null)
+                    {
+                        empVm.StaffPicture64 = Convert.ToBase64String(emp.StaffPicture);
+                    }
+
+                    allEmpVms.Add(empVm);
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine("Problem in " + GetType().Name + " " +
+                MethodBase.GetCurrentMethod()!.Name + " " + ex.Message);
+                throw;
+            }
+            return allEmpVms;
+        }
+
+        public async Task GetByPhone()
+        {
+            try
+            {
+                Employee emp = await _dao.GetByPhone(Phoneno!);
+                Title = emp.Title;
+                Firstname = emp.FirstName;
+                Lastname = emp.LastName;
+                Phoneno = emp.PhoneNo;
+                Email = emp.Email;
+                Id = emp.Id;
+                DepartmentId = emp.DepartmentId;
+
+                Timer = Convert.ToBase64String(emp.Timer!);
+            }
+            catch (NullReferenceException nex)
+            {
+                Debug.WriteLine(nex.Message);
+                Lastname = "not found";
+            }
+            catch (Exception ex)
+            {
+                Lastname = "not found";
+                Debug.WriteLine("Problem in " + GetType().Name + " " +
+                MethodBase.GetCurrentMethod()!.Name + " " + ex.Message);
+                throw;
+            }
+        }
+
         public async Task Add()
         {
             Id = -1;
@@ -71,158 +209,12 @@ namespace HelpdeskViewModels
                     PhoneNo = Phoneno,
                     Email = Email,
                     DepartmentId = DepartmentId,
-                    StaffPicture = StaffPicture64 != null ? Convert.FromBase64String(StaffPicture64!) : null
-                    //StaffPicture = Convert.FromBase64String(StaffPicture64!)
+
                 };
                 Id = await _dao.Add(emp);
             }
             catch (Exception ex)
             {
-                Debug.WriteLine("Problem in " + GetType().Name + " " +
-                MethodBase.GetCurrentMethod()!.Name + " " + ex.Message);
-                throw;
-            }
-        }
-        public async Task<int> Delete()
-        {
-            try
-            {
-                return await _dao.Delete(Id);
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine("Problem in " + GetType().Name + " " +
-                MethodBase.GetCurrentMethod()!.Name + " " + ex.Message);
-                throw;
-            }
-        }
-
-        public async Task<List<EmployeeViewModel>> GetAll()
-        {
-            List<EmployeeViewModel> allVms = new();
-            try
-            {
-                List<Employee> allEmployees = await _dao.GetAll();
-                foreach (Employee emp in allEmployees)
-                {
-                    EmployeeViewModel empVm = new()
-                    {
-                        Title = emp.Title,
-                        Firstname = emp.FirstName,
-                        Lastname = emp.LastName,
-                        Phoneno = emp.PhoneNo,
-                        Email = emp.Email,
-                        Id = emp.Id,
-                        DepartmentId = emp.DepartmentId,
-                        DepartmentName = emp.Department.DepartmentName,
-                        Timer = Convert.ToBase64String(emp.Timer!)
-                    };
-
-                    if (emp.StaffPicture != null)
-                    {
-                        empVm.StaffPicture64 = Convert.ToBase64String(emp.StaffPicture);
-                    }
-                    allVms.Add(empVm);
-                }
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine("Problem in " + GetType().Name + " " +
-                MethodBase.GetCurrentMethod()!.Name + " " + ex.Message);
-                throw;
-            }
-            return allVms;
-        }
-
-        public async Task GetByEmail(string email)
-        {
-            try
-            {
-                Employee emp = await _dao.GetByEmail(email);
-                Title = emp.Title;
-                Firstname = emp.FirstName;
-                Lastname = emp.LastName;
-                Phoneno = emp.PhoneNo;
-                Email = emp.Email;
-                Id = emp.Id;
-                DepartmentId = emp.DepartmentId;
-                if (emp.StaffPicture != null)
-                {
-                    StaffPicture64 = Convert.ToBase64String(emp.StaffPicture);
-                }
-                Timer = Convert.ToBase64String(emp.Timer!);
-            }
-            catch (NullReferenceException nex)
-            {
-                Debug.WriteLine(nex.Message);
-                Lastname = "not found";
-            }
-            catch (Exception ex)
-            {
-                Lastname = "not found";
-                Debug.WriteLine("Problem in " + GetType().Name + " " +
-                MethodBase.GetCurrentMethod()!.Name + " " + ex.Message);
-                throw;
-            }
-        }
-
-        public async Task GetById()
-        {
-            try
-            {
-                Employee emp = await _dao.GetByID((int)(Id!));
-                Title = emp.Title;
-                Firstname = emp.FirstName;
-                Lastname = emp.LastName;
-                Phoneno = emp.PhoneNo;
-                Email = emp.Email;
-                Id = emp.Id;
-                DepartmentId = emp.DepartmentId;
-                if (emp.StaffPicture != null)
-                {
-                    StaffPicture64 = Convert.ToBase64String(emp.StaffPicture);
-                }
-                Timer = Convert.ToBase64String(emp.Timer!);
-            }
-            catch (NullReferenceException nex)
-            {
-                Debug.WriteLine(nex.Message);
-                Lastname = "not found";
-            }
-            catch (Exception ex)
-            {
-                Lastname = "not found";
-                Debug.WriteLine("Problem in " + GetType().Name + " " +
-                MethodBase.GetCurrentMethod()!.Name + " " + ex.Message);
-                throw;
-            }
-        }
-        public async Task GetByPhoneNumber()
-        {
-            try
-            {
-                Employee emp = await _dao.GetByPhoneNumber(Phoneno!);
-                Title = emp.Title;
-                Firstname = emp.FirstName;
-                Lastname = emp.LastName;
-                Phoneno = emp.PhoneNo;
-                Email = emp.Email;
-                Id = emp.Id;
-                DepartmentId = emp.DepartmentId;
-                if (emp.StaffPicture != null)
-                {
-                    StaffPicture64 = Convert.ToBase64String(emp.StaffPicture);
-                }
-                Timer = Convert.ToBase64String(emp.Timer!);
-            }
-            catch (NullReferenceException nex)
-            {
-                Debug.WriteLine(nex.Message);
-                Phoneno = "not found";
-            }
-            catch (Exception ex)
-            {
-                Phoneno = "not found";
                 Debug.WriteLine("Problem in " + GetType().Name + " " +
                 MethodBase.GetCurrentMethod()!.Name + " " + ex.Message);
                 throw;
@@ -234,7 +226,7 @@ namespace HelpdeskViewModels
             int updateStatus;
             try
             {
-                Employee stu = new()
+                Employee emp = new()
                 {
                     Title = Title,
                     FirstName = Firstname,
@@ -244,10 +236,13 @@ namespace HelpdeskViewModels
                     Id = (int)Id!,
                     DepartmentId = DepartmentId,
                     StaffPicture = StaffPicture64 != null ? Convert.FromBase64String(StaffPicture64!) : null,
+
                     Timer = Convert.FromBase64String(Timer!)
                 };
+
+                Timer = Convert.ToBase64String(emp.Timer!);
                 updateStatus = -1; // start out with a failed state
-                updateStatus = Convert.ToInt16(await _dao.Update(stu)); // overwrite status
+                updateStatus = Convert.ToInt16(await _dao.Update(emp)); // overwrite status
             }
             catch (Exception ex)
             {
@@ -258,14 +253,23 @@ namespace HelpdeskViewModels
             return updateStatus;
         }
 
-
-
-
-
+        public async Task<int> Delete()
+        {
+            try
+            {
+                // dao will return # of rows deleted
+                return await _dao.Delete(Id);
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine("Problem in " + GetType().Name + " " +
+                MethodBase.GetCurrentMethod()!.Name + " " + ex.Message);
+                throw;
+            }
+        }
 
 
 
 
     }
 }
-

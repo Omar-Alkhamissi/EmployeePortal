@@ -1,7 +1,8 @@
-using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -9,16 +10,27 @@ namespace HelpdeskDAL
 {
     public class DepartmentDAO
     {
-        private readonly HelpdeskContext _context;
+        readonly IRepository<Department> _repo;
 
         public DepartmentDAO()
         {
-            _context = new HelpdeskContext(); // Ensure SchoolContext is properly configured
+            _repo = new HelpdeskRepository<Department>();
         }
-
         public async Task<List<Department>> GetAll()
         {
-            return await _context.Departments.ToListAsync();
+            List<Department> allDepartments = new List<Department>();
+            try
+            {
+
+                allDepartments = await _repo.GetAll();
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine("Problem in " + GetType().Name + " " +
+                MethodBase.GetCurrentMethod()!.Name + " " + ex.Message);
+                throw;
+            }
+            return allDepartments;
         }
     }
 }

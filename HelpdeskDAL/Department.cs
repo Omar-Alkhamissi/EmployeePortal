@@ -6,10 +6,7 @@ namespace HelpdeskDAL;
 public partial class Department : EmployeeEntity
 {
 
-
     public string? DepartmentName { get; set; }
-
-   
 
     public virtual ICollection<Employee> Employees { get; set; } = new List<Employee>();
 }

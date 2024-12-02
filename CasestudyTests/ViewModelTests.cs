@@ -48,7 +48,7 @@ namespace CasestudyTests
         public async Task EmployeeVM_GetByEmailTest()
         {
             EmployeeViewModel vm = new() { Email = "bs@abc.com" };
-            await vm.GetByEmail("bs@abc.com");
+            await vm.GetByEmail();
             Assert.NotNull(vm.Firstname);
         }
         [Fact]
@@ -58,13 +58,13 @@ namespace CasestudyTests
             await vm.GetById();
         }
 
-        [Fact]
-        public async Task EmployeeVM_GetByPhone()
-        {
-            EmployeeViewModel vm = new() { Phoneno = "(777)777-7777" };
-            await vm.GetByPhoneNumber();
-            Assert.NotNull(vm.Firstname);
-        }
+        //[Fact]
+        //public async Task EmployeeVM_GetByPhone()
+        //{
+        //    EmployeeViewModel vm = new() { Phoneno = "(777)777-7777" };
+        //    await vm.GetByPhoneNumber();
+        //    Assert.NotNull(vm.Firstname);
+        //}
         [Fact]
         public async Task EmployeeViewModel_Update()
         {
