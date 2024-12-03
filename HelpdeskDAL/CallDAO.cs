@@ -44,6 +44,20 @@ namespace HelpdeskDAL
                 throw;
             }
         }
+        public async Task<List<Call>> GetAll()
+        {
+            List<Call> calls = new List<Call>();
+            try
+            {
+                calls = await _repo.GetAll();
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"Problem in {GetType().Name}.{MethodBase.GetCurrentMethod()?.Name}: {ex.Message}");
+                throw;
+            }
+            return calls;
+        }
 
 
         public async Task<UpdateStatus> Update(Call updatedCall)

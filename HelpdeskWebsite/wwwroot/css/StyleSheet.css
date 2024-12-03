@@ -21,6 +21,23 @@
     border: 2px solid #1d2ca4;
 }
 
+#addCallButton {
+    display: inline-block; /* Keep the button inline-sized */
+    background-color: #007bff; /* Standard Bootstrap blue */
+    color: white;
+    padding: 10px 20px;
+    font-size: 16px;
+    border-radius: 5px;
+    border: none;
+    text-align: center; /* Center text inside the button */
+    transition: background-color 0.3s ease;
+}
+
+#addCallButton:hover {
+    background-color: #0056b3; /* Darker blue on hover */
+    color: white;
+}
+
 .modal-content {
     border-radius: 10px;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
@@ -129,4 +146,21 @@
 
 table {
     text-align: center;
+}
+
+.action-button {
+    min-width: 120px; /* Ensure consistent button width */
+    text-align: center;
+    font-size: 1rem; /* Adjust button font size */
+    padding: 0.5rem 1rem; /* Add padding for consistent size */
+}
+
+.row.justify-content-center {
+    display: flex;
+    justify-content: center; /* Center-align the buttons */
+    gap: 10px; /* Add spacing between buttons */
+}
+
+.card-footer {
+    text-align: center; /* Center the entire footer content */
 }

@@ -131,22 +131,19 @@ namespace HelpdeskViewModels
             try
             {
                 List<Employee> allEmployee = await _dao.GetAll();
-                // we need to convert empdent instance to empdentViewModel because
-                // the Web Layer isn't aware of the Domain class empdent
                 foreach (Employee emp in allEmployee)
                 {
                     EmployeeViewModel empVm = new()
                     {
                         Title = emp.Title,
                         Firstname = emp.FirstName,
-                        Lastname = emp.LastName,
+                        Lastname = emp.LastName ?? "Unknown",
                         Phoneno = emp.PhoneNo,
                         Email = emp.Email,
                         Id = emp.Id,
                         DepartmentId = emp.DepartmentId,
                         DepartmentName = emp.Department.DepartmentName,
-
-                        // binary value needs to be stored on client as base64
+                        IsTech = emp.IsTech ?? false, // Default to false if null
                         Timer = Convert.ToBase64String(emp.Timer!)
                     };
 

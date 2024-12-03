@@ -24,6 +24,9 @@ namespace HelpdeskViewModels
         public DateTime? DateClosed { get; set; }
         public bool OpenStatus { get; set; }
         public string? Timer { get; set; }
+        public string? EmployeeName { get; set; }
+        public string? ProblemDescription { get; set; }
+        public string? TechName { get; set; }
 
         public async Task<CallViewModel?> GetById(int id)
         {
@@ -53,6 +56,44 @@ namespace HelpdeskViewModels
                 throw;
             }
         }
+
+        public async Task<List<CallViewModel>> GetAll()
+        {
+            List<CallViewModel> allCalls = new();
+
+            try
+            {
+                var calls = await _dao.GetAll();
+
+                foreach (var call in calls)
+                {
+                    allCalls.Add(new CallViewModel
+                    {
+                        Id = call.Id,
+                        EmployeeId = call.EmployeeId,
+                        ProblemId = call.ProblemId,
+                        TechId = call.TechId,
+                        DateOpened = call.DateOpened,
+                        DateClosed = call.DateClosed,
+                        OpenStatus = call.OpenStatus,
+                        Notes = call.Notes,
+                        Timer = Convert.ToBase64String(call.Timer!),
+                        EmployeeName = call.Employee != null ? $"{call.Employee.FirstName} {call.Employee.LastName}" : "Unknown",
+                        ProblemDescription = call.Problem != null ? call.Problem.Description : "Unknown",
+                        TechName = call.Tech != null ? $"{call.Tech.FirstName} {call.Tech.LastName}" : "Unknown"
+                    });
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"Problem in {GetType().Name}.{MethodBase.GetCurrentMethod()?.Name}: {ex.Message}");
+                throw;
+            }
+
+            return allCalls;
+        }
+
+
         public async Task<int> Add()
         {
             try

@@ -102,5 +102,22 @@ namespace HelpdeskWebsite.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError); // something went wrong
             }
         }
+        [HttpGet("{id:int}")]
+        public async Task<IActionResult> GetById(int id)
+        {
+            try
+            {
+                EmployeeViewModel viewmodel = new() { Id = id };
+                await viewmodel.GetById();
+                return Ok(viewmodel);
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine("Problem in " + GetType().Name + " " +
+                MethodBase.GetCurrentMethod()!.Name + " " + ex.Message);
+                return StatusCode(StatusCodes.Status500InternalServerError); // something went wrong
+            }
+        }
+
     }
 }
