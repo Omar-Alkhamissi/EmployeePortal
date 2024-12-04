@@ -1,43 +1,37 @@
-﻿body {
+﻿/* body styling */
+body {
     font-family: Arial, sans-serif;
     background-color: #f8f9fa;
 }
 
-/* Change the navbar color to navy blue */
+/* Navbar styling */
 .navbar {
-    background-color: #001f3f; /* Navy blue */
+    background-color: #007bff;
 }
 
 .navbar-dark .navbar-nav .nav-link {
     color: #fff;
 }
 
-.photo {
-    display: block;
-    margin: 20px auto;
-    width: 150px;
-    height: auto;
-    border-radius: 50%;
-    border: 2px solid #1d2ca4;
-}
-
+/* Button styling */
 #addCallButton {
-    display: inline-block; /* Keep the button inline-sized */
-    background-color: #007bff; /* Standard Bootstrap blue */
+    display: inline-block;
+    background-color: #007bff;
     color: white;
     padding: 10px 20px;
     font-size: 16px;
     border-radius: 5px;
     border: none;
-    text-align: center; /* Center text inside the button */
+    text-align: center;
     transition: background-color 0.3s ease;
 }
 
 #addCallButton:hover {
-    background-color: #0056b3; /* Darker blue on hover */
+    background-color: #0056b3;
     color: white;
 }
 
+/* Modal styling */
 .modal-content {
     border-radius: 10px;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
@@ -67,13 +61,14 @@
     padding: 20px;
 }
 
+/* Card component styling */
 .card {
     border: 1px solid #28a745;
     border-radius: 10px;
 }
 
 .card-header {
-    background-color: #1d2ca4; /* Navy blue */
+    background-color: #1d2ca4;
     color: white;
     border-top-left-radius: 10px;
     border-top-right-radius: 10px;
@@ -86,12 +81,14 @@
     background-color: white;
 }
 
+/* Footer of modal and card */
 .modal-footer {
     background-color: #f8f9fa;
     border-bottom-left-radius: 10px;
     border-bottom-right-radius: 10px;
 }
 
+/* Button styles for primary, secondary, and danger actions */
 .btn-primary {
     background-color: #28a745;
     border: none;
@@ -119,6 +116,7 @@
         background-color: #c82333;
     }
 
+/* Dialog box styling for warnings or alerts */
 #dialog {
     padding: 15px;
     border: 2px solid #dc3545;
@@ -135,32 +133,38 @@
         width: 80px;
     }
 
+/* Input field focus effect */
 .form-control:focus {
     border-color: #28a745;
     box-shadow: 0 0 5px rgba(40, 167, 69, 0.5);
 }
 
+/* Top status section with spacing */
 #topStatus {
     margin-bottom: 20px;
 }
 
+/* Table styling for centered content */
 table {
     text-align: center;
 }
 
+/* Action button */
 .action-button {
-    min-width: 120px; /* Ensure consistent button width */
+    min-width: 120px;
     text-align: center;
-    font-size: 1rem; /* Adjust button font size */
-    padding: 0.5rem 1rem; /* Add padding for consistent size */
+    font-size: 1rem;
+    padding: 0.5rem 1rem;
 }
 
+/* Centered row layout with spacing */
 .row.justify-content-center {
     display: flex;
-    justify-content: center; /* Center-align the buttons */
-    gap: 10px; /* Add spacing between buttons */
+    justify-content: center;
+    gap: 10px;
 }
 
+/* Footer of card with centered content */
 .card-footer {
-    text-align: center; /* Center the entire footer content */
+    text-align: center;
 }

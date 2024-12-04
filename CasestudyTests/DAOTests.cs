@@ -113,7 +113,7 @@ namespace CasestudyTests
                     Assert.True(false); // first update failed
             }
             else
-                Assert.True(false); // didn't find student 1
+                Assert.True(false); // didn't find Employee 1
         }
 
         [Fact]

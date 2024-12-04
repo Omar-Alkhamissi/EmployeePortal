@@ -11,30 +11,35 @@
 <body>
     <!-- Navigation bar -->
     <nav class="navbar navbar-expand-md navbar-dark ">
-        <a class="navbar-brand mx-3" href="#">Info3070Exercises</a>
+        <a class="navbar-brand mx-3" href="#">Case #2</a>
         <button class="navbar-toggler mx-3" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent">
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarContent">
             <ul class="navbar-nav me-auto mx-3">
                 <li class="nav-item">
-                    <a class="nav-link active" href="#callModal" data-bs-toggle="modal" data-bs-target="#callModal">Add Call</a>
-                </li>
-                <li class="nav-item">
                     <a class="nav-link active" href="/home.html">Home</a>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link active" href="/employeecrud.html">Employee</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" href="/call.html">Call</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" href="/reports.html">Report</a>
+                </li>
             </ul>
-           
+
             <form>
                 <input class="form-control" type="search" placeholder="Search Calls" id="searchBar" aria-label="Search" style="width:10vw; margin-right:5vw;">
             </form>
         </div>
     </nav>
-    <img src="lib/Img/Desk.png" alt="logo" class="mx-auto d-block" style="max-height: 348px;">
+
     <!-- Main content -->
+    <img src="Img/Desk.png" alt="logo" class="mx-auto d-block" style="max-height: 348px;">
     <div class="justify-content-center align-items-center row mt-5 ml-1">
-
-
         <div class="col-12 text-center p-3">
             <h2>Helpdesk Calls</h2>
             <button id="addCallButton" class="btn btn-primary mt-3" data-bs-toggle="modal" data-bs-target="#callModal">
@@ -48,16 +53,16 @@
     <div class="modal fade" id="callModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="callModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content" style="width: 500px; margin: auto;">
-                <div class="modal-header" style="background-color: #002766; color: white;">
-
+                <div class="modal-header" style="background-color: #007bff; color: white;">
+                    <!-- Modal title -->
                     <h2 class="modal-title" id="modaltitle">Call Information</h2>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     <div class="card">
-                        <img src="lib/Img/Desk.png" alt="logo" class="mx-auto d-block" style="max-height: 348px;">
                         <div class="card-header text-center" style="background-color: #28a745; color: white;">Call Information</div>
                         <div class="card-body">
+                            <img src="Img/Desk.png" alt="Call Logo" class="mx-auto d-block mb-4" style="max-height: 150px;">
                             <form id="CallModalForm">
                                 <div class="row mb-3">
                                     <div class="col-4 text-end"><label for="ddlProblem">Problem:</label></div>
@@ -109,7 +114,7 @@
                                 </div>
                             </form>
                         </div>
-                        <div class="card-footer">
+                        <ddiv class="card-footer">
                             <div class="row justify-content-center">
                                 <div class="col-auto m-2">
                                     <input type="button" value="Add" id="addButton" class="btn btn-success action-button" style="display: none;" />
@@ -125,12 +130,12 @@
                             </div>
                         </div>
                     </div>
-                    <div id="modalStatus" class="mt-3 text-center"></div>
                 </div>
+                <div id="modalStatus" class="mt-3 text-center"></div>
             </div>
         </div>
-    </div>
 
+    <!-- Bootstrap and JQuery libraries -->
     <script src="/lib/js/jquery.min.js"></script>
     <script src="/lib/js/bootstrap.min.js"></script>
     <script src="js/call.js"></script>

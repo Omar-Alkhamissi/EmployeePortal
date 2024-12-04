@@ -1,6 +1,8 @@
-﻿$(() => {
+﻿$(() => { // Main jQuery routine - executes on page load
+
+    // Format a date object into a user-friendly string
     const formatDate = (date) => {
-        const d = date ? new Date(date) : new Date();
+        const d = date ? new Date(date) : new Date(); // Use the given date or the current date
         const options = {
             year: "numeric",
             month: "long",
@@ -8,24 +10,27 @@
             hour: "2-digit",
             minute: "2-digit",
         };
-        return d.toLocaleString("en-US", options);
+        return d.toLocaleString("en-US", options); // Format using locale options
     };
 
+    // Load dropdown options for problems, employees, and technicians
     const loadDropdowns = async () => {
         try {
+            // Load problems into dropdown
             const problemsResponse = await fetch("api/problem");
             if (problemsResponse.ok) {
                 const problems = await problemsResponse.json();
                 const problemDropdown = $("#ddlProblem");
                 problemDropdown.empty();
-                problemDropdown.append('<option value="" disabled selected>Select Problem</option>');
+                problemDropdown.append('<option value="" disabled selected>Select Problem</option>'); // Default option
                 problems.forEach((problem) => {
                     problemDropdown.append(
-                        `<option value="${problem.id}">${problem.description}</option>`
+                        `<option value="${problem.id}">${problem.description}</option>` // Add each problem
                     );
                 });
             }
 
+            // Load employees into dropdown
             const employeesResponse = await fetch("api/employee");
             if (employeesResponse.ok) {
                 const employees = await employeesResponse.json();
@@ -34,65 +39,68 @@
                 employeeDropdown.append('<option value="" disabled selected>Select Employee</option>');
                 employees.forEach((employee) => {
                     employeeDropdown.append(
-                        `<option value="${employee.id}">${employee.lastname || "Unknown"}</option>`
+                        `<option value="${employee.id}">${employee.lastname || "Unknown"}</option>` // Add each employee
                     );
                 });
 
+                // Load technicians (subset of employees) into dropdown
                 const technicianDropdown = $("#ddlTechnician");
                 technicianDropdown.empty();
                 technicianDropdown.append('<option value="" disabled selected>Select Technician</option>');
                 employees
-                    .filter((employee) => employee.isTech)
+                    .filter((employee) => employee.isTech) // Filter only technicians
                     .forEach((technician) => {
                         technicianDropdown.append(
-                            `<option value="${technician.id}">${technician.lastname || "Unknown"}</option>`
+                            `<option value="${technician.id}">${technician.lastname || "Unknown"}</option>` // Add each technician
                         );
                     });
             }
         } catch (error) {
-            console.error("Error loading dropdowns:", error.message);
+            console.error("Error loading dropdowns:", error.message); // Log any errors
         }
     };
 
+    // Reset the modal form for adding a new call
     const resetModalForAdd = () => {
-        $("#ddlProblem").val("").removeClass("is-invalid").attr("disabled", false);
-        $("#ddlEmployee").val("").removeClass("is-invalid").attr("disabled", false);
-        $("#ddlTechnician").val("").removeClass("is-invalid").attr("disabled", false);
-        $("#TextBoxNotes").val("").removeClass("is-invalid").attr("disabled", false);
-        $("#dateOpened").val(formatDate()).attr("disabled", true);
-        $("#dateClosed").val("").attr("disabled", true);
-        $("#closeCall").prop("checked", false).attr("disabled", false);
+        $("#ddlProblem").val("").removeClass("is-invalid").attr("disabled", false); // Enable and reset problem dropdown
+        $("#ddlEmployee").val("").removeClass("is-invalid").attr("disabled", false); // Enable and reset employee dropdown
+        $("#ddlTechnician").val("").removeClass("is-invalid").attr("disabled", false); // Enable and reset technician dropdown
+        $("#TextBoxNotes").val("").removeClass("is-invalid").attr("disabled", false); // Clear notes input
+        $("#dateOpened").val(formatDate()).attr("disabled", true); // Set current date for 'dateOpened'
+        $("#dateClosed").val("").attr("disabled", true); // Clear and disable 'dateClosed'
+        $("#closeCall").prop("checked", false).attr("disabled", false); // Reset and enable 'closeCall' checkbox
         $("#updateButton").hide(); // Hide the Update button
         $("#addButton").show(); // Show the Add button
         $("#deleteButton").hide(); // Hide the Delete button in Add mode
         $("#modalStatus").text(""); // Clear any previous status messages
     };
 
+    // Validate the call form inputs
     const validateCallForm = () => {
-        let isValid = true;
+        let isValid = true; // Assume the form is valid initially
 
-        // Clear existing error messages
+        // Remove existing validation error messages
         $(".validation-error").remove();
 
-        // Validate Problem
+        // Validate Problem selection
         if (!$("#ddlProblem").val()) {
             isValid = false;
             $("#ddlProblem").after('<div class="validation-error text-danger fw-bold">Please select a Problem.</div>');
         }
 
-        // Validate Employee
+        // Validate Employee selection
         if (!$("#ddlEmployee").val()) {
             isValid = false;
             $("#ddlEmployee").after('<div class="validation-error text-danger fw-bold">Please select an Employee.</div>');
         }
 
-        // Validate Technician
+        // Validate Technician selection
         if (!$("#ddlTechnician").val()) {
             isValid = false;
             $("#ddlTechnician").after('<div class="validation-error text-danger fw-bold">Please select a Technician.</div>');
         }
 
-        // Validate Notes
+        // Validate Notes input
         const notes = $("#TextBoxNotes").val().trim();
         if (!notes) {
             isValid = false;
@@ -102,32 +110,30 @@
             $("#TextBoxNotes").after('<div class="validation-error text-danger fw-bold">Notes must not exceed 250 characters.</div>');
         }
 
-        return isValid;
+        return isValid; // Return the overall form validity
     };
 
-
+    // Fetch and display all calls
     const getAllCalls = async () => {
         try {
-            $("#callList").text("Loading calls...");
+            $("#callList").text("Loading calls..."); // Show loading message
             const response = await fetch("api/call");
             if (response.ok) {
-                const calls = await response.json();
-                sessionStorage.setItem("allCalls", JSON.stringify(calls));
-                buildCallList(calls);
-                const msg = ""; // Replace this with an actual message if needed
-                msg === "" ?
-                    $("#status").text("Calls Loaded") :
-                    $("#status").text(`${msg} - Calls Loaded`);
+                const calls = await response.json(); // Parse JSON response
+                sessionStorage.setItem("allCalls", JSON.stringify(calls)); // Store calls in sessionStorage
+                buildCallList(calls); // Populate call list
+                $("#status").text("Calls Loaded"); // Update status
             } else {
-                $("#callList").text("Failed to load calls.");
+                $("#callList").text("Failed to load calls."); // Handle fetch failure
             }
         } catch (error) {
-            $("#callList").text(error.message);
+            $("#callList").text(error.message); // Display error message
         }
     };
 
+    // Build the call list from the given data
     const buildCallList = (data) => {
-        $("#callList").empty();
+        $("#callList").empty(); // Clear the existing call list
         const header = `
             <div class="list-group-item text-white bg-secondary row d-flex" id="status">Call Info</div>
             <div class="list-group-item row d-flex text-center" id="heading">
@@ -135,7 +141,7 @@
                 <div class="col-4 h4">Employee</div>
                 <div class="col-4 h4">Problem</div>
             </div>`;
-        $("#callList").append(header);
+        $("#callList").append(header); // Add list header
         data.forEach((call) => {
             const button = `
                 <button class="list-group-item row d-flex" id="${call.id}">
@@ -143,10 +149,11 @@
                     <div class="col-4">${call.employeeName}</div>
                     <div class="col-4">${call.problemDescription}</div>
                 </button>`;
-            $("#callList").append(button);
+            $("#callList").append(button); // Add each call as a clickable button
         });
     };
 
+    // Set up the modal with call data for editing or viewing
     const setupModal = (id) => {
         const calls = JSON.parse(sessionStorage.getItem("allCalls"));
         if (!calls) {
@@ -157,7 +164,7 @@
 
         const call = calls.find((c) => c.id === parseInt(id));
         if (call) {
-            sessionStorage.setItem("currentCall", JSON.stringify(call));
+            sessionStorage.setItem("currentCall", JSON.stringify(call)); // Store selected call in sessionStorage
             $("#ddlProblem").val(call.problemId);
             $("#ddlEmployee").val(call.employeeId);
             $("#ddlTechnician").val(call.techId);
@@ -166,20 +173,21 @@
             $("#dateClosed").val(call.dateClosed ? formatDate(call.dateClosed) : "");
             $("#closeCall").prop("checked", !call.openStatus);
 
-            if (!call.openStatus) {
+            if (!call.openStatus) { // Disable inputs for closed calls
                 $("#ddlProblem, #ddlEmployee, #ddlTechnician, #TextBoxNotes, #closeCall").attr("disabled", true);
                 $("#updateButton").hide();
-            } else {
+            } else { // Enable inputs for open calls
                 $("#ddlProblem, #ddlEmployee, #ddlTechnician, #TextBoxNotes, #closeCall").attr("disabled", false);
                 $("#updateButton").show();
             }
 
             $("#addButton").hide();
             $("#deleteButton").show(); // Ensure the Delete button is visible
-            $("#callModal").modal("toggle");
+            $("#callModal").modal("toggle"); // Open the modal
         }
     };
 
+    // Add a new call
     const addCall = async () => {
         if (!validateCallForm()) return;
 
@@ -224,6 +232,8 @@
         }
     };
 
+
+    // Update an existing call
     const updateCall = async () => {
         if (!validateCallForm()) return;
 
@@ -260,6 +270,7 @@
         }
     };
 
+    // Delete an existing call
     const deleteCall = async () => {
         const call = JSON.parse(sessionStorage.getItem("currentCall"));
         if (!call || !call.id) {
@@ -273,8 +284,8 @@
             if (response.ok) {
                 const result = await response.json();
                 $("#modalStatus").text(result.result || "Call deleted successfully.");
-                await getAllCalls(); // Ensure calls are loaded first
-                const msg = ""; // Replace with a relevant message if needed
+                await getAllCalls();
+                const msg = ""; 
                 msg === "" ?
                     $("#status").text("Call Deleted Successfully") :
                     $("#status").text(`${msg} - Call Deleted Successfully`);
@@ -289,6 +300,7 @@
         }
     };
 
+    // Event listener for search functionality
     $("#searchBar").on("keyup", () => {
         const allCalls = JSON.parse(sessionStorage.getItem("allCalls"));
         const query = $("#searchBar").val().toLowerCase();
@@ -298,37 +310,45 @@
             call.employeeName.toLowerCase().includes(query)
         );
 
-        buildCallList(filteredCalls);
+        buildCallList(filteredCalls); // Update the call list with filtered results
     });
 
-
+    // Event listener for clicking on a call in the list
     $("#callList").on("click", (e) => {
-        const id = e.target.closest("button").id;
-        if (id) setupModal(id);
+        const id = e.target.closest("button").id; // Get the clicked call's ID
+        if (id) setupModal(id); // Open the modal for the selected call
     });
 
-    $("#updateButton").on("click", updateCall);
+    // Event listener for Add button
     $("#addButton").on("click", addCall);
+
+    // Event listener for Update button
+    $("#updateButton").on("click", updateCall);
+
+    // Event listener for Delete button
     $("#deleteButton").on("click", deleteCall);
+
+    // Event listener for opening the modal for adding a new call
     $("#addCallButton").on("click", () => {
         resetModalForAdd();
-        $("#deleteButton").hide(); // Ensure it's hidden for adding new calls
-        $("#callModal").modal("show");
+        $("#callModal").modal("show"); // Show the modal
     });
 
+    // Event listener for toggling the 'closeCall' checkbox
     $("#closeCall").on("change", () => {
         if ($("#closeCall").is(":checked")) {
-            $("#dateClosed").val(formatDate());
+            $("#dateClosed").val(formatDate()); // Set 'dateClosed' to the current date
         } else {
-            $("#dateClosed").val("");
+            $("#dateClosed").val(""); // Clear 'dateClosed'
         }
     });
 
+    // Reset modal on close
     $("#callModal").on("hidden.bs.modal", () => {
-        resetModalForAdd(); // Reset fields and buttons when modal is closed
-        $("#deleteButton").hide(); // Hide delete button on close to prepare for Add mode
+        resetModalForAdd(); // Reset modal fields
     });
 
+    // Load dropdown data and call list on page load
     loadDropdowns();
     getAllCalls();
-});
+}); // End of jQuery ready function

@@ -7,27 +7,28 @@
     <link href="css/StyleSheet.css?v=1.0" rel="stylesheet" />
     <link href="/lib/css/bootstrap.min.css" rel="stylesheet" />
 
-
     <meta name="viewport" content="width=device-width, initial-scale=1">
 </head>
 <body>
-
-    <nav class="navbar navbar-expand-md navbar-light bg-warning">
-        <a class="navbar-brand mx-3" href="#">Info3070Exercises</a>
+    <!-- Navigation bar -->
+    <nav class="navbar navbar-expand-md navbar-dark ">
+        <a class="navbar-brand mx-3" href="#">Case #2</a>
         <button class="navbar-toggler mx-3" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent">
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarContent">
-            <ul class="navbar-nav  me-auto mx-3">
-                <li class="nav-item">
-                    <a class="nav-link active" href="/employeeaddupdate.html#theModal" data-bs-toggle="modal"
-                       data-bs-target="#theModal">Add/Update</a>
-                </li>
+            <ul class="navbar-nav me-auto mx-3">
                 <li class="nav-item">
                     <a class="nav-link active" href="/home.html">Home</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link active" href="/employee.html">Employee</a>
+                    <a class="nav-link active" href="/employeecrud.html">Employee</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" href="/call.html">Call</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" href="/reports.html">Report</a>
                 </li>
             </ul>
             <form>
@@ -37,101 +38,105 @@
         </div>
     </nav>
 
-        <!-- This <div> contains the modal markup -->
-        <div class="modal fade" id="theModal" data-bs-backdrop="static"
-             data-bs-keyboard="false" tabindex="-1" aria-labelledby="theModalLabel" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content" style="width: 500px; margin: auto;">
-                    <div class="modal-header" style="background-color: #002766; color: white;">
-                        <h2 class="modal-title" id="modaltitle">Update Employee</h2>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        <div class="card">
-                            <div class="card-header text-center" style="background-color: #28a745; color: white;">Employee Information</div>
-                            <div class="card-body">
-                                <form id="EmployeeModalForm">
-                                    <div class="row mb-3">
-                                        <div class="col-4 text-end"><label for="TextBoxTitle">Title:</label></div>
-                                        <div class="col-8">
-                                            <input type="text" id="TextBoxTitle" class="form-control" placeholder="Enter Title" />
-                                        </div>
-                                    </div>
-                                    <div class="row mb-3">
-                                        <div class="col-4 text-end"><label for="TextBoxFirst">First Name:</label></div>
-                                        <div class="col-8">
-                                            <input type="text" id="TextBoxFirst" class="form-control" placeholder="Enter First Name" />
-                                        </div>
-                                    </div>
-                                    <div class="row mb-3">
-                                        <div class="col-4 text-end"><label for="TextBoxLast">Last Name:</label></div>
-                                        <div class="col-8">
-                                            <input type="text" id="TextBoxLast" class="form-control" placeholder="Enter Last Name" />
-                                        </div>
-                                    </div>
-                                    <div class="row mb-3">
-                                        <div class="col-4 text-end"><label for="TextBoxEmail">Email:</label></div>
-                                        <div class="col-8">
-                                            <input type="email" id="TextBoxEmail" class="form-control" placeholder="Enter Email" />
-                                        </div>
-                                    </div>
-                                    <div class="row mb-3">
-                                        <div class="col-4 text-end"><label for="TextBoxPhone">Phone Number:</label></div>
-                                        <div class="col-8">
-                                            <input type="text" id="TextBoxPhone" class="form-control" placeholder="Enter Phone Number" />
-                                        </div>
-                                    </div>
-                                    <div class="row mb-3">
-                                        <div class="col-4 text-end"><label for="ddlDepartment">Department:</label></div>
-                                        <div class="col-8">
-                                            <select id="ddlDepartment" class="form-control">
-                                                <option value="" disabled selected>Select Department</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="row mb-3">
-                                        <div class="col-4 text-end"><label for="uploader">Picture:</label></div>
-                                        <div class="col-8">
-                                            <div id="imageHolder" class="mb-2"></div>
-                                            <input type="file" id="uploader" class="form-control" />
-                                        </div>
-                                    </div>
-                                </form>
-                            </div>
-                            <div class="card-footer text-center d-flex flex-column align-items-center justify-content-center">
-                                <div class="row justify-content-center w-100">
-                                    <div class="col-auto m-2">
-                                        <input type="button" value="Update" id="actionbutton" class="btn btn-secondary w-100">
-                                    </div>
-                                    <div class="col-auto m-2">
-                                        <input type="button" class="btn btn-secondary w-100" value="Delete this Employee?" id="dialogbutton">
-                                    </div>
-                                </div>
-                                <div class="alert alert-danger fade show text-center" role="alert" id="dialog"
-                                     style="width: 80%; max-width: 500px; margin: 2vh auto 0; display: none;">
-                                    <strong>What's it going to be?</strong>
-                                    <p></p>
-                                    <div class="d-flex justify-content-center mt-3">
-                                        <input type="button" class="btn btn-danger me-2" value="Yes" id="yesbutton">
-                                        <input type="button" class="btn btn-secondary" value="No" id="nobutton">
-                                    </div>
-                                </div>
-                                </div>
-                                <div id="modalstatus" class="mt-3"></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-   
-
-    <img src="lib/Img/Desk.png" alt="logo" class="mx-auto d-block" style="max-height: 348px;">
+    <!-- Main content -->
+    <img src="Img/Desk.png" alt="logo" class="mx-auto d-block" style="max-height: 348px;" />
     <div class="justify-content-center align-items-center row mt-5 ml-1">
         <div class="col-12 text-center p-3"><h2>Current Employee</h2></div>
         <div class="list-group col-10" id="employeeList" style="height:45vh;">
         </div>
     </div>
 
+    <!-- Modal for Employees -->
+    <div class="modal fade" id="theModal" data-bs-backdrop="static"
+         data-bs-keyboard="false" tabindex="-1" aria-labelledby="theModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content" style="width: 500px; margin: auto;">
+                <div class="modal-header" style="background-color: #007bff; color: white;">
+                    <!-- Modal title -->
+                    <h2 class="modal-title" id="modaltitle">Update Employee</h2>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="card">
+                        <div class="card-header text-center" style="background-color: #28a745; color: white;">Employee Information</div>
+                        <img src="Img/Desk.png" alt="logo" class="mx-auto d-block" style="max-height: 348px;" />
+                        <div class="card-body">
+                            <form id="EmployeeModalForm">
+                                <div class="row mb-3">
+                                    <div class="col-4 text-end"><label for="TextBoxTitle">Title:</label></div>
+                                    <div class="col-8">
+                                        <input type="text" id="TextBoxTitle" name="TextBoxTitle" class="form-control" placeholder="Enter Title" />
+                                    </div>
+                                </div>
+                                <div class="row mb-3">
+                                    <div class="col-4 text-end"><label for="TextBoxFirst">First Name:</label></div>
+                                    <div class="col-8">
+                                        <input type="text" id="TextBoxFirst" name="TextBoxFirst" class="form-control" placeholder="Enter First Name" />
+                                    </div>
+                                </div>
+                                <div class="row mb-3">
+                                    <div class="col-4 text-end"><label for="TextBoxLast">Last Name:</label></div>
+                                    <div class="col-8">
+                                        <input type="text" id="TextBoxLast" name="TextBoxLast" class="form-control" placeholder="Enter Last Name" />
+                                    </div>
+                                </div>
+                                <div class="row mb-3">
+                                    <div class="col-4 text-end"><label for="TextBoxEmail">Email:</label></div>
+                                    <div class="col-8">
+                                        <input type="email" id="TextBoxEmail" class="form-control" placeholder="Enter Email" />
+                                    </div>
+                                </div>
+                                <div class="row mb-3">
+                                    <div class="col-4 text-end"><label for="TextBoxPhone">Phone Number:</label></div>
+                                    <div class="col-8">
+                                        <input type="text" id="TextBoxPhone" name="TextBoxPhone" class="form-control" placeholder="Enter Phone Number" />
+                                    </div>
+                                </div>
+                                <div class="row mb-3">
+                                    <div class="col-4 text-end"><label for="ddlDepartment">Department:</label></div>
+                                    <div class="col-8">
+                                        <select id="ddlDepartment" class="form-control">
+                                            <option value="" disabled selected>Select Department</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="row mb-3">
+                                    <div class="col-4 text-end"><label for="uploader">Picture:</label></div>
+                                    <div class="col-8">
+                                        <div id="imageHolder" class="mb-2"></div>
+                                        <input type="file" id="uploader" class="form-control" />
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+
+                        <!-- Modal footer -->
+                        <div class="card-footer text-center d-flex flex-column align-items-center justify-content-center">
+                            <div class="row justify-content-center w-100">
+                                <div class="col-auto m-2">
+                                    <input type="button" value="Update" id="actionbutton" class="btn btn-secondary w-100">
+                                </div>
+                                <div class="col-auto m-2">
+                                    <input type="button" class="btn btn-secondary w-100" value="Delete this Employee?" id="dialogbutton">
+                                </div>
+                            </div>
+                            <div class="alert alert-danger fade show text-center" role="alert" id="dialog"
+                                 style="width: 80%; max-width: 500px; margin: 2vh auto 0; display: none;">
+                                <strong>What's it going to be?</strong>
+                                <div class="d-flex justify-content-center mt-3">
+                                    <input type="button" class="btn btn-danger me-2" value="Yes" id="yesbutton">
+                                    <input type="button" class="btn btn-secondary" value="No" id="nobutton">
+                                </div>
+                            </div>
+                        </div>
+                        <div id="modalstatus" class="mt-3"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap and JQuery libraries -->
     <script src="/lib/js/jquery.min.js"></script>
     <script src="lib/js/jquery.validate.min.js"></script>
     <script src="/lib/js/bootstrap.min.js"></script>

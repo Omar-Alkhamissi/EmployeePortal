@@ -6,62 +6,39 @@
     <link rel="icon" href="data:;base64,iVBORw0KGgo=">
     <link href="/lib/css/bootstrap.min.css" rel="stylesheet" />
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <style>
-        body {
-            background-color: #f8f9fa; 
-            color: #333; 
-        }
-
-        .navbar {
-            background-color: #007bff; 
-        }
-
-        .navbar-brand, .nav-link {
-            color: #fff; 
-        }
-
-            .nav-link:hover {
-                color: #ffd700; 
-            }
-
-        .logo-container {
-            text-align: center;
-            margin: 20px 0;
-        }
-
-            .logo-container img {
-                max-width: 100%; 
-                height: auto;
-            }
-    </style>
+    <link href="css/StyleSheet.css?v=1.0" rel="stylesheet" />
 </head>
-
 <body>
-    <div class="mx-2 my-2">
-        <nav class="navbar navbar-expand-md navbar-light">
-            <div class="container-fluid">
-                <a class="navbar-brand mx-3" href="#">Info3070Exercises</a>
-
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent" aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-
-                <div class="collapse navbar-collapse" id="navbarContent">
-                    <ul class="navbar-nav ms-auto">
-                        <li class="nav-item">
-                            <a class="nav-link active" href="Home.html">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="employee.html">Employees</a>
-                        </li>
-                    </ul>
-                </div>
+    <!-- Navigation bar -->
+    <nav class="navbar navbar-expand-md navbar-dark">
+        <div class="container-fluid">
+            <a class="navbar-brand mx-3" href="#">Case #2</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent" aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarContent">
+                <ul class="navbar-nav me-auto mx-3">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="/home.html">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="/employeecrud.html">Employee</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="/call.html">Call</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="/reports.html">Report</a>
+                    </li>
+                </ul>
             </div>
-        </nav>
-    </div>
+        </div>
+    </nav>
 
-    <div class="logo-container">
-        <img src="lib/Img/desk.jpg" alt="Logo" />
+    <!-- Main content -->
+    <div class="container text-center mt-5">
+        <img src="Img/Desk.png" alt="Logo" class="mx-auto d-block mb-4" style="max-height: 300px;">
+        <h1>Lab 7b</h1>
     </div>
 
     <!-- Modal for Lab7a -->
@@ -130,11 +107,10 @@
 
     <script src="/lib/js/jquery.min.js"></script>
     <script src="/lib/js/bootstrap.min.js"></script>
-    <script src="/js/studentlookup.js"></script>
 
-    <!-- Visual Studio Browser Link -->
-    <script type="text/javascript" src="/_vs/browserLink" async="async" id="__browserLink_initializationData" data-requestId="2c96b1abe214486ca1cb4e4c4daf0d00" data-requestMappingFromServer="false" data-connectUrl="http://localhost:55735/02781564b6b341dcbd76658fc33bbf4e/browserLink"></script>
-    <!-- End Browser Link -->
-    <script src="/_framework/aspnetcore-browser-refresh.js"></script>
+<!-- Visual Studio Browser Link -->
+<script type="text/javascript" src="/_vs/browserLink" async="async" id="__browserLink_initializationData" data-requestId="2c96b1abe214486ca1cb4e4c4daf0d00" data-requestMappingFromServer="false" data-connectUrl="http://localhost:55735/02781564b6b341dcbd76658fc33bbf4e/browserLink"></script>
+<!-- End Browser Link -->
+<script src="/_framework/aspnetcore-browser-refresh.js"></script>
 </body>
 </html>

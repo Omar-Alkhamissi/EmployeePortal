@@ -3,6 +3,7 @@ using HelpdeskDAL;
 using HelpdeskViewModels;
 using System.Diagnostics;
 using System.Reflection;
+using HelpdeskWebsite.Reports;
 
 namespace HelpdeskAPI.Controllers
 {
@@ -76,5 +77,7 @@ namespace HelpdeskAPI.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError); // something went wrong
             }
         }
+       
+
     }
 }

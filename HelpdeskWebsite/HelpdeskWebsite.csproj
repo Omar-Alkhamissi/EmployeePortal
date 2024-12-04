@@ -7,7 +7,15 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Include="wwwroot\lib\Img\Desk.png" />
+    <Compile Remove="NewFolder\**" />
+    <Content Remove="NewFolder\**" />
+    <EmbeddedResource Remove="NewFolder\**" />
+    <None Remove="NewFolder\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="wwwroot\Img\Desk.png" />
+    <None Include="wwwroot\reports.html" />
   </ItemGroup>
 
   <ItemGroup>
@@ -15,11 +23,16 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+    <PackageReference Include="itext7" Version="7.2.5" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="7.1.0" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\HelpdeskViewModels\HelpdeskViewModels.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="wwwroot\pdfs\" />
   </ItemGroup>
 
 </Project>

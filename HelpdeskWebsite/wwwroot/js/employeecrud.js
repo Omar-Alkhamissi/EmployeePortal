@@ -1,6 +1,4 @@
-﻿$(() => { // main jQuery routine - executes every on page load, $ is short for jquery
-
-
+﻿$(() => { // main jQuery routine - executes every time the page loads, $ is shorthand for jQuery
 
     // Keyup listener for real-time validation feedback
     document.addEventListener("keyup", () => {
@@ -17,16 +15,16 @@
     // Initialize jQuery Validation
     $("#EmployeeModalForm").validate({
         rules: {
-            TextBoxTitle: { maxlength: 4, required: true, validTitle: true },
-            TextBoxFirst: { maxlength: 25, required: true },
-            TextBoxLast: { maxlength: 25, required: true },
-            TextBoxEmail: { maxlength: 40, required: true, email: true },
-            TextBoxPhone: { maxlength: 15, required: true }
+            TextBoxTitle: { maxlength: 4, required: true, validTitle: true }, // Custom rule for title validation
+            TextBoxFirst: { maxlength: 25, required: true }, // First name rules
+            TextBoxLast: { maxlength: 25, required: true }, // Last name rules
+            TextBoxEmail: { maxlength: 40, required: true, email: true }, // Email rules
+            TextBoxPhone: { maxlength: 15, required: true } // Phone number rules
         },
         errorElement: "div", // Display error messages in <div>
         errorPlacement: (error, element) => {
-            error.addClass("text-warning"); // Add a Bootstrap class for styling
-            error.insertAfter(element); // Place the error message after the input
+            error.addClass("text-warning"); // Add Bootstrap styling for error messages
+            error.insertAfter(element); // Place the error message after the input field
         },
         messages: {
             TextBoxTitle: {
@@ -56,75 +54,79 @@
 
     // Custom Validation Rule for Title
     $.validator.addMethod("validTitle", (value) => {
-        return ["Mr.", "Ms.", "Mrs.", "Dr."].includes(value);
+        return ["Mr.", "Ms.", "Mrs.", "Dr."].includes(value); // Allow specific titles
     }, "Invalid title");
 
-
+    // Load department dropdown list with data from sessionStorage
     const loadDepartmentDDL = (empdiv) => {
-        html = '';
-        $('#ddlDepartment').empty();
-        let alldepartnments = JSON.parse(sessionStorage.getItem('alldepartments'));
-        alldepartnments.forEach((div) => { html += `<option value="${div.id}">${div.name}</option>` });
-        $('#ddlDepartment').append(html);
-        $('#ddlDepartment').val(empdiv);
-    }; // loadDivisionDDL
+        let html = ''; // Initialize dropdown HTML
+        $('#ddlDepartment').empty(); // Clear existing dropdown options
+        let alldepartments = JSON.parse(sessionStorage.getItem('alldepartments')); // Fetch departments from sessionStorage
+        alldepartments.forEach((div) => {
+            html += `<option value="${div.id}">${div.name}</option>`; // Create options dynamically
+        });
+        $('#ddlDepartment').append(html); // Append options to the dropdown
+        $('#ddlDepartment').val(empdiv); // Set selected value
+    }; // loadDepartmentDDL
 
-
+    // Fetch and load employee and department data from the server
     const getAll = async (msg) => {
         try {
             $("#employeeList").text("Finding employee Information...");
-            let response = await fetch(`api/employee`);
+            let response = await fetch(`api/employee`); // Fetch employee data
             if (response.ok) {
-                let payload = await response.json(); // this returns a promise, so we await it
-                buildEmployeeList(payload);
-                msg === "" ? // are we appending to an existing message
+                let payload = await response.json(); // Parse JSON response
+                buildEmployeeList(payload); // Build the employee list on the page
+                msg === "" ?
                     $("#status").text("Employees Loaded") : $("#status").text(`${msg} - Employees Loaded`);
-            } else if (response.status !== 404) { // probably some other client side error
+            } else if (response.status !== 404) {
                 let problemJson = await response.json();
-                errorRtn(problemJson, response.status);
-            } else { // else 404 not found
-                $("#status").text("no such path on server");
-            } // else
+                errorRtn(problemJson, response.status); // Handle errors
+            } else {
+                $("#status").text("No such path on server"); // Handle 404 error
+            }
 
-            response = await fetch(`api/department`);
+            response = await fetch(`api/department`); // Fetch department data
             if (response.ok) {
-                let divs = await response.json(); // this returns a promise, so we await it
-                sessionStorage.setItem("alldepartments", JSON.stringify(divs));
-            } else if (response.status !== 404) { // probably some other client side error
+                let divs = await response.json(); // Parse JSON response
+                sessionStorage.setItem("alldepartments", JSON.stringify(divs)); // Store in sessionStorage
+            } else if (response.status !== 404) {
                 let problemJson = await response.json();
-                errorRtn(problemJson, response.status);
-            } else { // else 404 not found
-                $("#status").text("no such path on server");
-            } // else
+                errorRtn(problemJson, response.status); // Handle errors
+            } else {
+                $("#status").text("No such path on server"); // Handle 404 error
+            }
         } catch (error) {
-            $("#status").text(error.message);
+            $("#status").text(error.message); // Display error messages
         }
     }; // getAll
 
-
+    // Build and display the employee list
     const buildEmployeeList = (data, usealldata = true) => {
-        $("#employeeList").empty();
-        div = $(`<div class="list-group-item text-white bg-secondary row d-flex" id="status">Employee Info</div>
-                 <div class= "list-group-item row d-flex text-center" id="heading">
-                 <div class="col-4 h4">Title</div>
-                 <div class="col-4 h4">First</div>
-                 <div class="col-4 h4">Last</div>
-                 </div>`);
-        div.appendTo($("#employeeList"));
-        usealldata ? sessionStorage.setItem("allemployees", JSON.stringify(data)) : null;
-        btn = $(`<button class="list-group-item row d-flex" id="0">...click to add employee</button>`);
-        btn.appendTo($("#employeeList"));
+        $("#employeeList").empty(); // Clear the current list
+        let div = $(`<div class="list-group-item text-white bg-secondary row d-flex" id="status">Employee Info</div>
+                     <div class="list-group-item row d-flex text-center" id="heading">
+                     <div class="col-4 h4">Title</div>
+                     <div class="col-4 h4">First</div>
+                     <div class="col-4 h4">Last</div>
+                     </div>`);
+        div.appendTo($("#employeeList")); // Add header to the list
+        usealldata ? sessionStorage.setItem("allemployees", JSON.stringify(data)) : null; // Store data if required
+        let btn = $(`<button class="list-group-item row d-flex" id="0">...click to add employee</button>`);
+        btn.appendTo($("#employeeList")); // Add "Add Employee" button
         data.forEach(emp => {
             btn = $(`<button class="list-group-item row d-flex" id="${emp.id}">`);
             btn.html(`<div class="col-4" id="employeetitle${emp.id}">${emp.title}</div>
-                     <div class="col-4" id="employeefname${emp.id}">${emp.firstname}</div>
-                     <div class="col-4" id="employeelastnam${emp.id}">${emp.lastname}</div>`
-                                );
-            btn.appendTo($("#employeeList"));
+                      <div class="col-4" id="employeefname${emp.id}">${emp.firstname}</div>
+                      <div class="col-4" id="employeelastname${emp.id}">${emp.lastname}</div>`);
+            btn.appendTo($("#employeeList")); // Append each employee's details as a button
         }); // forEach
     }; // buildEmployeeList
-    getAll(""); // first grab the data from the server
 
+    // Load initial data from the server on page load
+    getAll("");
+
+    // Update Employee
     const update = async (e) => {
         // action button click event handler
         try {
