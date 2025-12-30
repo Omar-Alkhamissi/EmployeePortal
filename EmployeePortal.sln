@@ -5,7 +5,7 @@ VisualStudioVersion = 17.11.35303.130
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HelpdeskDAL", "HelpdeskDAL\HelpdeskDAL.csproj", "{632D62E3-CE4B-470E-9D9B-227972B4F1E4}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CasestudyTests", "CasestudyTests\CasestudyTests.csproj", "{006F0E50-E004-48FA-ABDE-EF4774F4004A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HelpdeskTests", "CasestudyTests\HelpdeskTests.csproj", "{006F0E50-E004-48FA-ABDE-EF4774F4004A}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HelpdeskViewModels", "HelpdeskViewModels\HelpdeskViewModels.csproj", "{A2DD3FD0-63C6-4D03-B924-A1E33971DF2C}"
 EndProject
