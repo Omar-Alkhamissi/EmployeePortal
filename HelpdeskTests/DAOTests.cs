@@ -10,7 +10,7 @@ using Xunit.Abstractions;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
-namespace CasestudyTests
+namespace HelpdeskTests
 {
     public class DAOTests
     {
